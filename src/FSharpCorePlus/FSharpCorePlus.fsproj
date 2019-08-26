@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Exception.fs" />
+    <Compile Include="Array.fs" />
+    <Compile Include="Array2D.fs" />
+    <Compile Include="List.fs" />
+    <Compile Include="String.fs" />
+    <Compile Include="Casting.fs" />
+    <Compile Include="Cycle.fs" />
+  </ItemGroup>
+
+</Project>
