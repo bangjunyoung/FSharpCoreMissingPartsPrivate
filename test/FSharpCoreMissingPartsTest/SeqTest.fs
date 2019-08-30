@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright 2019 Bang Jun-young
 // All rights reserved.
 //
@@ -23,13 +23,36 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace FSharpCorePlus
+module FSharpCoreMissingParts.SeqTest
 
-[<AutoOpen>]
-module Exception =
-    let invalidArgNull argName (message: string) =
-        raise <| System.ArgumentNullException(argName, message)
+open NUnit.Framework
 
-    let raiseIfNull argName arg =
-        if arg = null then
-            invalidArgNull argName (argName + " can't be null")
+let isOrderedAscendingTestParameters =
+    [
+        [], true
+        [1], true
+        [1; 1], true
+        [1; 2; 3], true
+        [1; 3; 2], false
+    ]
+    |> List.map (fun (source, expected) ->
+        TestCaseData(source).Returns(expected))
+
+[<TestCaseSource("isOrderedAscendingTestParameters")>]
+let ``isOrderedAscending returns expected result`` source =
+    Seq.isOrderedAscending source
+
+let isOrderedDescendingTestParameters =
+    [
+        [], true
+        [1], true
+        [1; 1], true
+        [3; 1; 2], false
+        [3; 2; 1], true
+    ]
+    |> List.map (fun (source, expected) ->
+        TestCaseData(source).Returns(expected))
+
+[<TestCaseSource("isOrderedDescendingTestParameters")>]
+let ``isOrderedDescending returns expected result`` source =
+    Seq.isOrderedDescending source

@@ -23,22 +23,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace FSharpCorePlus
+namespace FSharpCoreMissingParts
 
-type CycleNode<'T> internal (item: 'T) as this =
-    let mutable next = this
-    member __.Value = item
-    member __.Next
-        with get() = next
-        and internal set value = next <- value
-
-module Cycle =
-    let value (node: CycleNode<_>) = node.Value
-    let next (node: CycleNode<_>) = node.Next
-
-    let ofList source =
-        source
-        |> List.map CycleNode
-        |> List.pairwiseCyclic
-        |> List.map (fun (x, y) -> x.Next <- y; x)
-        |> List.head
+module String =
+    let ofSeq (source: seq<char>) =
+        (System.Text.StringBuilder(Seq.length source), source)
+        ||> Seq.fold (fun builder c -> builder.Append(c))
+        |> string

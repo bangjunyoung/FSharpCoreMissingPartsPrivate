@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright 2019 Bang Jun-young
 // All rights reserved.
 //
@@ -23,20 +23,19 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace FSharpCorePlus
+module FSharpCoreMissingParts.ListTest
 
-module Array =
-    let tryBinarySearchWith comparer (value: 'a) (source: 'a[]) =
-        let rec loop lo hi =
-            if lo > hi then None
-            else
-                let mid = lo + (hi - lo) / 2
-                match sign <| comparer value source.[mid] with
-                | 0 -> Some mid
-                | 1 -> loop (mid + 1) hi
-                | _ -> loop lo (mid - 1)
+open NUnit.Framework
 
-        loop 0 (source.Length - 1)
+let pairwiseCyclicTestParameters =
+    [
+        [], []
+        [1], [1, 1]
+        [1; 2; 3], [1, 2; 2, 3; 3, 1]
+    ]
+    |> List.map (fun (source, expected) ->
+        TestCaseData(source).Returns(expected))
 
-    let tryBinarySearch value source =
-        source |> tryBinarySearchWith compare value
+[<TestCaseSource("pairwiseCyclicTestParameters")>]
+let ``pairwiseCyclic returns expected result`` source =
+    source |> List.pairwiseCyclic
