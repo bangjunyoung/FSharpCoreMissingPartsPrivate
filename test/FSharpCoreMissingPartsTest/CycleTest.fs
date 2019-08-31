@@ -23,34 +23,34 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.Array2DTest
+module FSharpCoreMissingParts.CycleTest
 
 open NUnit.Framework
 
-let ofArrayTestParameters =
+let testParameters =
+    let cycle = Cycle.ofList [1 .. 3]
     [
-        [||], 0, 0, array2D [| [||] |]
-        [|1|], 1, 1, array2D [| [|1|] |]
-        [|1 .. 6|], 3, 2, array2D [| [|1; 2|]; [|3; 4|]; [|5; 6|] |]
-        [|1 .. 6|], 2, 3, array2D [| [|1; 2; 3|]; [|4; 5; 6|] |]
+        (fun () -> cycle |> Cycle.value), 1
+        (fun () -> cycle |> Cycle.next |> Cycle.value), 2
+        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.value), 3
+        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.next |> Cycle.value), 1
+        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.next |> Cycle.next |> Cycle.value), 2
+
+        (fun () -> cycle.Value), 1
+        (fun () -> cycle.Next.Value), 2
+        (fun () -> cycle.Next.Next.Value), 3
+        (fun () -> cycle.Next.Next.Next.Value), 1
+        (fun () -> cycle.Next.Next.Next.Next.Value), 2
     ]
-    |> List.map (fun (source, nrows, ncols, expected) ->
-        TestCaseData(source, nrows, ncols).Returns(expected))
+    |> List.map (fun (value, expected) ->
+        TestCaseData(value).Returns(expected))
 
-[<TestCaseSource("ofArrayTestParameters")>]
-let ``ofArray returns expected result`` (source: int[]) nrows ncols =
-    source |> Array2D.ofArray nrows ncols
+[<TestCaseSource("testParameters")>]
+let ``Cycle.value returns expected result`` (f: unit -> int) =
+    f ()
 
-let toArrayTestParameters =
-    [
-        array2D [| [||] |], [||]
-        array2D [| [|1|] |], [|1|]
-        array2D [| [|1; 2|]; [|3; 4|]; [|5; 6|] |], [|1 .. 6|]
-        array2D [| [|1; 2; 3|]; [|4; 5; 6|] |], [|1 .. 6|]
-    ]
-    |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
-
-[<TestCaseSource("toArrayTestParameters")>]
-let ``toArray returns expected result`` (source: int[,]) =
-    source |> Array2D.toArray
+[<Test>]
+let ``Cycle.ofList throws ArgumentException on empty list`` () =
+    Assert.Throws<System.ArgumentException>(
+        fun () -> ([]: int list) |> Cycle.ofList |> ignore)
+    |> ignore
