@@ -27,30 +27,29 @@ module FSharpCoreMissingParts.CycleTest
 
 open NUnit.Framework
 
-let testParameters =
-    let cycle = Cycle.ofList [1 .. 3]
+let valueTestParameters =
+    let boxList = [box 1; box 2]
+    let cycle = Cycle.ofList boxList
     [
-        (fun () -> cycle |> Cycle.value), 1
-        (fun () -> cycle |> Cycle.next |> Cycle.value), 2
-        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.value), 3
-        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.next |> Cycle.value), 1
-        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.next |> Cycle.next |> Cycle.value), 2
+        (fun () -> cycle |> Cycle.value), boxList.[0]
+        (fun () -> cycle |> Cycle.next |> Cycle.value), boxList.[1]
+        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.value), boxList.[0]
+        (fun () -> cycle |> Cycle.next |> Cycle.next |> Cycle.next |> Cycle.value), boxList.[1]
 
-        (fun () -> cycle.Value), 1
-        (fun () -> cycle.Next.Value), 2
-        (fun () -> cycle.Next.Next.Value), 3
-        (fun () -> cycle.Next.Next.Next.Value), 1
-        (fun () -> cycle.Next.Next.Next.Next.Value), 2
+        (fun () -> cycle.Value), boxList.[0]
+        (fun () -> cycle.Next.Value), boxList.[1]
+        (fun () -> cycle.Next.Next.Value), boxList.[0]
+        (fun () -> cycle.Next.Next.Next.Value), boxList.[1]
     ]
     |> List.map (fun (value, expected) ->
         TestCaseData(value).Returns(expected))
 
-[<TestCaseSource("testParameters")>]
-let ``Cycle.value returns expected result`` (f: unit -> int) =
+[<TestCaseSource("valueTestParameters")>]
+let ``value with valid arguments`` (f: unit -> obj) =
     f ()
 
 [<Test>]
-let ``Cycle.ofList throws ArgumentException on empty list`` () =
+let ``ofList throws ArgumentException if [] is given`` () =
     Assert.Throws<System.ArgumentException>(
-        fun () -> ([]: int list) |> Cycle.ofList |> ignore)
+        fun () -> [] |> Cycle.ofList |> ignore)
     |> ignore
