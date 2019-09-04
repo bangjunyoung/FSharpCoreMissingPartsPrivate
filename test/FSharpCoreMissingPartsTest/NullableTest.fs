@@ -27,32 +27,54 @@ module FSharpCoreMissingParts.NullableTest
 
 open NUnit.Framework
 
-let validTestParameters =
+let validIntTestParameters =
     [
         (fun () -> Value 19 + Value 23), Value 42
-        (fun () -> 19 + Value 23), Value 42
-        (fun () -> Value 19 + 23), Value 42
+        (fun () -> 19 +. Value 23), Value 42
+        (fun () -> Value 19 .+ 23), Value 42
         (fun () -> Value 19 - Value 23), Value -4
-        (fun () -> 19 - Value 23), Value -4
-        (fun () -> Value 19 - 23), Value -4
+        (fun () -> 19 -. Value 23), Value -4
+        (fun () -> Value 19 .- 23), Value -4
         (fun () -> Value 19 * Value 23), Value 437
-        (fun () -> 19 * Value 23), Value 437
-        (fun () -> Value 19 * 23), Value 437
+        (fun () -> 19 *. Value 23), Value 437
+        (fun () -> Value 19 .* 23), Value 437
         (fun () -> Value 437 / Value 23), Value 19
-        (fun () -> 437 / Value 19), Value 23
-        (fun () -> Value 437 / 23), Value 19
+        (fun () -> 437 /. Value 19), Value 23
+        (fun () -> Value 437 ./ 23), Value 19
     ]
     |> List.map (fun (expr, expected) ->
         TestCaseData(expr).Returns(expected))
 
-[<TestCaseSource("validTestParameters")>]
-let ``operation with valid operands`` (expr: unit -> FSharpNullable<int>) =
+[<TestCaseSource("validIntTestParameters")>]
+let ``operation with valid int operands`` (expr: unit -> FSharpNullable<int>) =
+    expr ()
+
+let validInt64TestParameters =
+    [
+        (fun () -> Value 19L + Value 23L), Value 42L
+        (fun () -> 19L +. Value 23L), Value 42L
+        (fun () -> Value 19L .+ 23L), Value 42L
+        (fun () -> Value 19L - Value 23L), Value -4L
+        (fun () -> 19L -. Value 23L), Value -4L
+        (fun () -> Value 19L .- 23L), Value -4L
+        (fun () -> Value 19L * Value 23L), Value 437L
+        (fun () -> 19L *. Value 23L), Value 437L
+        (fun () -> Value 19L .* 23L), Value 437L
+        (fun () -> Value 437L / Value 23L), Value 19L
+        (fun () -> 437L /. Value 19L), Value 23L
+        (fun () -> Value 437L ./ 23L), Value 19L
+    ]
+    |> List.map (fun (expr, expected) ->
+        TestCaseData(expr).Returns(expected))
+
+[<TestCaseSource("validInt64TestParameters")>]
+let ``operation with valid int64 operands`` (expr: unit -> FSharpNullable<int>) =
     expr ()
 
 let nullTestParameters =
     [
         (fun () -> Value 19 + Null), Null
-        (fun () -> Null + 23), Null
+        (fun () -> Null .+ 23), Null
         (fun () -> Value 19 + Value 23 + Null), Null
     ]
     |> List.map (fun (expr, expected) ->
