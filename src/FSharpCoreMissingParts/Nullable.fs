@@ -144,30 +144,3 @@ type FSharpNullable<'T when 'T : struct> with
     static member inline (-) (a, b) = a .-. b
     static member inline (*) (a, b) = a .*. b
     static member inline (/) (a, b) = a ./. b
-
-type FSharpNullableAddition = FSharpNullableAddition with
-    static member        (?<-) (FSharpNullableAddition, a, b) = a .+ b
-    static member        (?<-) (FSharpNullableAddition, a, b) = a +. b
-    static member inline (?<-) (FSharpNullableAddition, a, b) = a + b
-
-type FSharpNullableSubtraction = FSharpNullableSubtraction with
-    static member        (?<-) (FSharpNullableSubtraction, a, b) = a .- b
-    static member        (?<-) (FSharpNullableSubtraction, a, b) = a -. b
-    static member inline (?<-) (FSharpNullableSubtraction, a, b) = a - b
-
-type FSharpNullableMultiply = FSharpNullableMultiply with
-    static member        (?<-) (FSharpNullableMultiply, a, b) = a .* b
-    static member        (?<-) (FSharpNullableMultiply, a, b) = a *. b
-    static member inline (?<-) (FSharpNullableMultiply, a, b) = a * b
-
-type FSharpNullableDivision = FSharpNullableDivision with
-    static member        (?<-) (FSharpNullableDivision, a, b) = a ./ b
-    static member        (?<-) (FSharpNullableDivision, a, b) = a /. b
-    static member inline (?<-) (FSharpNullableDivision, a, b) = a / b
-
-[<AutoOpen>]
-module FSharpNullableExtension =
-    let inline (+) a b = (?<-) FSharpNullableAddition a b
-    let inline (-) a b = (?<-) FSharpNullableSubtraction a b
-    let inline (*) a b = (?<-) FSharpNullableMultiply a b
-    let inline (/) a b = (?<-) FSharpNullableDivision a b
