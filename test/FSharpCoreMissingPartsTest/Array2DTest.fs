@@ -38,7 +38,7 @@ let ofArrayTestParameters =
         TestCaseData(source, nrows, ncols).Returns(expected))
 
 [<TestCaseSource("ofArrayTestParameters")>]
-let ``ofArray returns expected result`` (source: int[]) nrows ncols =
+let ``ofArray with valid arguments`` (source: int[]) nrows ncols =
     source |> Array2D.ofArray nrows ncols
 
 let toArrayTestParameters =
@@ -52,5 +52,5 @@ let toArrayTestParameters =
         TestCaseData(source).Returns(expected))
 
 [<TestCaseSource("toArrayTestParameters")>]
-let ``toArray returns expected result`` (source: int[,]) =
+let ``toArray with valid arguments`` (source: int[,]) =
     source |> Array2D.toArray

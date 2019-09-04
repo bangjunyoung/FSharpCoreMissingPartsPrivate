@@ -29,13 +29,18 @@ open NUnit.Framework
 
 let ofSeqTestParameters =
     [
-        [], ""
-        ['a'], "a"
-        ['a'; 'b'], "ab"
+        Seq.empty, ""
+        seq [], ""
+        seq [||], ""
+        seq [|'a'|], "a"
+        seq ['b'], "b"
+        seq { yield 'c'}, "c"
+        seq ['d'; 'e'], "de"
+        seq [|'f'; 'g'; 'h'|], "fgh"
     ]
-    |> List.map (fun (source, expected) ->
+    |> Seq.map (fun (source, expected) ->
         TestCaseData(source).Returns(expected))
 
 [<TestCaseSource("ofSeqTestParameters")>]
-let ``ofSeq returns expected result`` source =
+let ``ofSeq with valid arguments`` source =
     source |> String.ofSeq

@@ -41,8 +41,8 @@ let valueTestParameters =
         (fun () -> cycle.Next.Next.Value), boxList.[0]
         (fun () -> cycle.Next.Next.Next.Value), boxList.[1]
     ]
-    |> List.map (fun (value, expected) ->
-        TestCaseData(value).Returns(expected))
+    |> List.map (fun (expr, expected) ->
+        TestCaseData(expr).Returns(expected))
 
 [<TestCaseSource("valueTestParameters")>]
 let ``value with valid arguments`` (f: unit -> obj) =

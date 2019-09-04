@@ -39,7 +39,7 @@ let isOrderedAscendingTestParameters =
         TestCaseData(source).Returns(expected))
 
 [<TestCaseSource("isOrderedAscendingTestParameters")>]
-let ``isOrderedAscending returns expected result`` source =
+let ``isOrderedAscending with valid arguments`` source =
     Seq.isOrderedAscending source
 
 let isOrderedDescendingTestParameters =
@@ -54,5 +54,5 @@ let isOrderedDescendingTestParameters =
         TestCaseData(source).Returns(expected))
 
 [<TestCaseSource("isOrderedDescendingTestParameters")>]
-let ``isOrderedDescending returns expected result`` source =
+let ``isOrderedDescending with valid arguments`` source =
     Seq.isOrderedDescending source

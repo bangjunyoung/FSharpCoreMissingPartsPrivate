@@ -37,7 +37,7 @@ let tryBinarySearchTestParameters =
         TestCaseData(source, value).Returns(expected))
 
 [<TestCaseSource("tryBinarySearchTestParameters")>]
-let ``tryBinarySearch returns expected result`` (source: int[]) value =
+let ``tryBinarySearch with valid arguments`` (source: int[]) value =
     source |> Array.tryBinarySearch value
 
 let tryBinarySearchWithTestParameters =
@@ -50,6 +50,6 @@ let tryBinarySearchWithTestParameters =
         TestCaseData(source, value).Returns(expected))
 
 [<TestCaseSource("tryBinarySearchWithTestParameters")>]
-let ``tryBinarySearchWith returns expected result`` (source: int[]) value =
+let ``tryBinarySearchWith with valid arguments`` (source: int[]) value =
     let reverseCompare a b = compare b a
     source |> Array.tryBinarySearchWith reverseCompare value

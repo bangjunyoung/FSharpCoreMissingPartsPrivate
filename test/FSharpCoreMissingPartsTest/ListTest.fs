@@ -27,6 +27,10 @@ module FSharpCoreMissingParts.ListTest
 
 open NUnit.Framework
 
+[<Test>]
+let ``pairwiseCyclic returns [] if [] is given`` () =
+    Assert.That([] |> List.pairwiseCyclic, Is.EqualTo [])
+
 let pairwiseCyclicTestParameters =
     [
         [], []
@@ -37,5 +41,5 @@ let pairwiseCyclicTestParameters =
         TestCaseData(source).Returns(expected))
 
 [<TestCaseSource("pairwiseCyclicTestParameters")>]
-let ``pairwiseCyclic returns expected result`` source =
+let ``pairwiseCyclic with valid arguments`` source =
     source |> List.pairwiseCyclic
