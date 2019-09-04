@@ -20,6 +20,7 @@
     <Compile Include="String.fs" />
     <Compile Include="Casting.fs" />
     <Compile Include="Cycle.fs" />
+    <Compile Include="Nullable.fs" />
   </ItemGroup>
 
 </Project>
