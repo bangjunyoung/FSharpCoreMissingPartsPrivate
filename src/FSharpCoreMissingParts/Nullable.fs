@@ -131,7 +131,8 @@ type FSharpNullable<'T when 'T : struct> with
 
     static member inline op_Explicit(this) : 'T =
         match this with
-        | Null -> invalidArg "this" "is null"
+        | Null -> raise <| System.InvalidOperationException(
+                               "Nullable object must have a value.")
         | Value x -> x
 
     static member inline ( <??> ) (lhs, rhs) =
