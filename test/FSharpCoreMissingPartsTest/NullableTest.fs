@@ -29,6 +29,7 @@ open NUnit.Framework
 
 let validIntTestParameters =
     [
+        (fun () -> Value 19 .+. Value 23), Value 42
         (fun () -> Value 19 + Value 23), Value 42
         (fun () -> 19 +. Value 23), Value 42
         (fun () -> Value 19 .+ 23), Value 42
@@ -51,6 +52,7 @@ let ``operation with valid int operands`` (expr: unit -> FSharpNullable<int>) =
 
 let validInt64TestParameters =
     [
+        (fun () -> Value 19L .+. Value 23L), Value 42L
         (fun () -> Value 19L + Value 23L), Value 42L
         (fun () -> 19L +. Value 23L), Value 42L
         (fun () -> Value 19L .+ 23L), Value 42L
@@ -68,7 +70,7 @@ let validInt64TestParameters =
         TestCaseData(expr).Returns(expected))
 
 [<TestCaseSource("validInt64TestParameters")>]
-let ``operation with valid int64 operands`` (expr: unit -> FSharpNullable<int>) =
+let ``operation with valid int64 operands`` (expr: unit -> FSharpNullable<int64>) =
     expr ()
 
 let nullTestParameters =
