@@ -122,8 +122,6 @@ module FSharpNullableOps =
         }
 
 type FSharpNullable<'T when 'T : struct> with
-    member this.Bind(f) = this |> FSharpNullable.bind f
-
     member this.HasValue =
         match this with
         | Null -> false
