@@ -18,6 +18,7 @@
     <Compile Include="Array2D.fs" />
     <Compile Include="List.fs" />
     <Compile Include="String.fs" />
+    <Compile Include="Option.fs" />
     <Compile Include="Casting.fs" />
     <Compile Include="Cycle.fs" />
     <Compile Include="Nullable.fs" />
