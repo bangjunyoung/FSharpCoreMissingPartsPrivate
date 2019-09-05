@@ -25,7 +25,6 @@
 
 namespace FSharpCoreMissingParts.Nullable
 
-[<StructuralEquality; StructuralComparison>]
 [<Struct>]
 type FSharpNullable<'T when 'T : struct> =
     | Value of 'T
