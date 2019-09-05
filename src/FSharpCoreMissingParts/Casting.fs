@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace FSharpCoreMissingParts
+namespace FSharpCoreMissingParts.Casting
 
 [<AutoOpen>]
 module Casting =
