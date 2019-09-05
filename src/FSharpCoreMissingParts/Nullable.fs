@@ -23,13 +23,29 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace FSharpCoreMissingParts
+namespace FSharpCoreMissingParts.Nullable
 
 [<StructuralEquality; StructuralComparison>]
 [<Struct>]
 type FSharpNullable<'T when 'T : struct> =
     | Value of 'T
     | Null
+
+    member this.HasValue =
+        match this with
+        | Null -> false
+        | Value _ -> true
+
+    static member inline op_Explicit(this) : 'T =
+        match this with
+        | Null -> raise <| System.InvalidOperationException(
+                               "Nullable object must have a value.")
+        | Value x -> x
+
+    static member inline ( <??> ) (lhs, rhs) =
+        match lhs with
+        | Null -> rhs
+        | Value x -> x
 
 module FSharpNullable =
     let bind f x =
@@ -122,22 +138,6 @@ module FSharpNullableOps =
         }
 
 type FSharpNullable<'T when 'T : struct> with
-    member this.HasValue =
-        match this with
-        | Null -> false
-        | Value _ -> true
-
-    static member inline op_Explicit(this) : 'T =
-        match this with
-        | Null -> raise <| System.InvalidOperationException(
-                               "Nullable object must have a value.")
-        | Value x -> x
-
-    static member inline ( <??> ) (lhs, rhs) =
-        match lhs with
-        | Null -> rhs
-        | Value x -> x
-
     static member inline (+) (a, b) = a .+. b
     static member inline (-) (a, b) = a .-. b
     static member inline (*) (a, b) = a .*. b
