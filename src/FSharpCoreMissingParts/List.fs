@@ -37,3 +37,8 @@ module List =
                 | x :: y :: rest -> (x, y) :: loop (y :: rest)
 
             loop source
+
+    let crossMap mapper source1 source2 =
+        source1 |> List.collect (fun x ->
+            source2 |> List.map (fun y ->
+                mapper x y))
