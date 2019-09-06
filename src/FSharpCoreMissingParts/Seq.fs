@@ -47,12 +47,12 @@ module Seq =
         loop state
 
     let isOrderedWith comparer source =
-        if Seq.isEmpty source then
+        if source |> Seq.truncate 2 |> Seq.length <= 1 then
             true
         else
-            ((true, Seq.head source), source)
-            ||> foldSome (fun (ordered, prev) current ->
-                if ordered
+            ((true, Seq.head source), Seq.tail source)
+            ||> foldSome (fun (sorted, prev) current ->
+                if sorted
                 then Some (comparer prev current <= 0, current)
                 else None)
             |> fst
@@ -63,3 +63,19 @@ module Seq =
     let isOrderedDescending source =
         let reverseCompare a b = compare b a
         source |> isOrderedWith reverseCompare
+
+    let isOrderedStrictAscending source =
+        let strictCompare a b =
+            match sign <| compare a b with
+            | -1 -> -1
+            | _ -> 1
+
+        source |> isOrderedWith strictCompare
+
+    let isOrderedStrictDescending source =
+        let strictReverseCompare a b =
+            match sign <| compare a b with
+            | 1 -> -1
+            | _ -> 1
+
+        source |> isOrderedWith strictReverseCompare
