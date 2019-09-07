@@ -41,7 +41,7 @@ type FSharpNullable<'T when 'T : struct> =
                                "Nullable object must have a value.")
         | Value x -> x
 
-    static member inline ( <??> ) (lhs, rhs) =
+    static member inline (<??>) (lhs, rhs) =
         match lhs with
         | Null -> rhs
         | Value x -> x
@@ -57,87 +57,56 @@ type FSharpNullableBuilder() =
     member __.Return(x) = Value x
 
 [<AutoOpen>]
-module FSharpNullableOps =
+module FSharpNullableComputationExpression =
     let nullable = FSharpNullableBuilder()
 
-    let inline ( .+. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+[<AutoOpen>]
+module private FSharpNullableOps =
+    let inline add (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
         nullable {
             let! x = a
             let! y = b
             return x + y
         }
 
-    let inline ( .+ ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
-        nullable {
-            let! x = a
-            return x + b
-        }
-
-    let inline ( +. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
-        nullable {
-            let! y = b
-            return a + y
-        }
-
-    let inline ( .-. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+    let inline subtract (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
         nullable {
             let! x = a
             let! y = b
             return x - y
         }
 
-    let inline ( .- ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
-        nullable {
-            let! x = a
-            return x - b
-        }
-
-    let inline ( -. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
-        nullable {
-            let! y = b
-            return a - y
-        }
-
-    let inline ( .*. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+    let inline multiply (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
         nullable {
             let! x = a
             let! y = b
             return x * y
         }
 
-    let inline ( .* ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
-        nullable {
-            let! x = a
-            return x * b
-        }
-
-    let inline ( *. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
-        nullable {
-            let! y = b
-            return a * y
-        }
-
-    let inline ( ./. ) (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
+    let inline divide (a: FSharpNullable<'T>) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
         nullable {
             let! x = a
             let! y = b
             return x / y
         }
 
-    let inline ( ./ ) (a: FSharpNullable<'T>) (b: 'T) : FSharpNullable<'T> =
-        nullable {
-            let! x = a
-            return x / b
-        }
-
-    let inline ( /. ) (a: 'T) (b: FSharpNullable<'T>) : FSharpNullable<'T> =
-        nullable {
-            let! y = b
-            return a / y
-        }
-
 type FSharpNullable<'T when 'T : struct> with
-    static member inline (+) (a, b) = a .+. b
-    static member inline (-) (a, b) = a .-. b
-    static member inline (*) (a, b) = a .*. b
-    static member inline (/) (a, b) = a ./. b
+    static member inline ( + ) (lhs, rhs) = add lhs rhs
+    static member inline (.+.) (lhs, rhs) = add lhs rhs
+    static member inline ( +.) (lhs, rhs) = add (Value lhs) rhs
+    static member inline (.+ ) (lhs, rhs) = add lhs (Value rhs)
+
+    static member inline ( - ) (lhs, rhs) = subtract lhs rhs
+    static member inline (.-.) (lhs, rhs) = subtract lhs rhs
+    static member inline ( -.) (lhs, rhs) = subtract (Value lhs) rhs
+    static member inline (.- ) (lhs, rhs) = subtract lhs (Value rhs)
+
+    static member inline ( * ) (lhs, rhs) = multiply lhs rhs
+    static member inline (.*.) (lhs, rhs) = multiply lhs rhs
+    static member inline ( *.) (lhs, rhs) = multiply (Value lhs) rhs
+    static member inline (.* ) (lhs, rhs) = multiply lhs (Value rhs)
+
+    static member inline ( / ) (lhs, rhs) = divide lhs rhs
+    static member inline (./.) (lhs, rhs) = divide lhs rhs
+    static member inline ( /.) (lhs, rhs) = divide (Value lhs) rhs
+    static member inline (./ ) (lhs, rhs) = divide lhs (Value rhs)
