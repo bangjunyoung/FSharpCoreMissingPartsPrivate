@@ -41,7 +41,7 @@ type FSharpNullable<'T when 'T : struct> =
                                "Nullable object must have a value.")
         | Value x -> x
 
-    static member inline (<??>) (lhs, rhs) =
+    static member inline (.|) (lhs, rhs) =
         match lhs with
         | Null -> rhs
         | Value x -> x
