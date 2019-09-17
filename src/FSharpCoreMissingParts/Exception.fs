@@ -27,9 +27,6 @@ namespace FSharpCoreMissingParts
 
 [<AutoOpen>]
 module Exception =
-    let invalidArgNull argName (message: string) =
-        raise <| System.ArgumentNullException(argName, message)
-
     let raiseIfNull argName arg =
         if arg |> isNull then
-            invalidArgNull argName (argName + " can't be null")
+            nullArg argName
