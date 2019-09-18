@@ -39,6 +39,6 @@ module NaturalSort =
                 | _ -> box (str.ToUpperInvariant()))
             |> Array.toList
 
-        let compare x y = Comparer<_>.Default.Compare(x, y)
-
-        source |> Seq.sortWith (fun x y -> compare (split x) (split y))
+        source
+        |> Seq.sortWith (fun x y ->
+            Comparer<_>.Default.Compare(split x, split y))
