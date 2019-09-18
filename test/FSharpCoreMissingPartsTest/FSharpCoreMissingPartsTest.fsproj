@@ -19,6 +19,7 @@
     <Compile Include="ListTest.fs" />
     <Compile Include="StringTest.fs" />
     <Compile Include="CycleTest.fs" />
+    <Compile Include="NaturalSortTest.fs" />
     <Compile Include="NullableTest.fs" />
   </ItemGroup>
 
