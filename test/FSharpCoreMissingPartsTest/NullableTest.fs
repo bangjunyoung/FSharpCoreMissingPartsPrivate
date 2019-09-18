@@ -25,8 +25,8 @@
 
 module FSharpCoreMissingParts.NullableTest
 
-open FSharpCoreMissingParts.Nullable
 open NUnit.Framework
+open FSharpCoreMissingParts.Nullable
 
 let validIntTestParameters =
     [
