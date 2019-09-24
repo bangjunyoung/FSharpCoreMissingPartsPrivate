@@ -32,14 +32,14 @@ open NUnit.Framework
 let ``windowed with empty source`` () =
     Assert.That("".AsMemory() |> Memory.windowed 1, Is.EqualTo Seq.empty)
 
-[<TestCase("12345", 1, ExpectedResult = [|"1"; "2"; "3"; "4"; "5"|])>]
-[<TestCase("12345", 3, ExpectedResult = [|"123"; "234"; "345"|])>]
+[<TestCase("1234", 1, ExpectedResult = [|"1"; "2"; "3"; "4"|])>]
+[<TestCase("1234", 2, ExpectedResult = [|"12"; "23"; "34"|])>]
 let ``windowed with valid arguments`` (source: string) size =
     source.AsMemory()
     |> Memory.windowed size
     |> Seq.map string
 
-[<TestCase("12345", 0)>]
+[<TestCase("1234", 0)>]
 let ``windowed with invalid arguments throws ArgumentException`` (source: string) size =
     Assert.That(Func<_>(fun () -> source.AsMemory() |> Memory.windowed size),
         Throws.TypeOf<ArgumentException>())
