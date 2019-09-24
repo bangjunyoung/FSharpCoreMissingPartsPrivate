@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Bang Jun-young</Authors>
     <Description>A library and collection of various useful functions intended to fill missing parts of the F# Core library.</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -21,6 +21,7 @@
     <Compile Include="Cycle.fs" />
     <Compile Include="NaturalSort.fs" />
     <Compile Include="Nullable.fs" />
+    <Compile Include="Memory.fs" />
   </ItemGroup>
 
 </Project>

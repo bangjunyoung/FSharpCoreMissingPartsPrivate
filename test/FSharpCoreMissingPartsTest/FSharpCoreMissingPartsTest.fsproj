@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <Compile Include="CycleTest.fs" />
     <Compile Include="NaturalSortTest.fs" />
     <Compile Include="NullableTest.fs" />
+    <Compile Include="MemoryTest.fs" />
   </ItemGroup>
 
   <ItemGroup>
