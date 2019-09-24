@@ -2,23 +2,6 @@
 
 A library and collection of various useful functions intended to fill missing parts of the F# Core library.
 
-## Exception
-
-### `invalidArgNull`
-
-```fsharp
-let parse str =
-    if str |> isNull then
-        invalidArgNull "str" "can't be null"
-```
-
-### `raiseIfNull`
-
-```fsharp
-let parse str =
-    raiseIfNull "str" str
-```
-
 ## Casting
 
 ### `^>` operator
