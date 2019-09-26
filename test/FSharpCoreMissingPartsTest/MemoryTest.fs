@@ -34,6 +34,9 @@ let ``windowed with empty source`` () =
 
 [<TestCase("1234", 1, ExpectedResult = [|"1"; "2"; "3"; "4"|])>]
 [<TestCase("1234", 2, ExpectedResult = [|"12"; "23"; "34"|])>]
+[<TestCase("1234", 3, ExpectedResult = [|"123"; "234"|])>]
+[<TestCase("1234", 4, ExpectedResult = [|"1234"|])>]
+[<TestCase("1234", 5, ExpectedResult = [||])>]
 let ``windowed with valid arguments`` (source: string) size =
     source.AsMemory()
     |> Memory.windowed size
@@ -43,3 +46,35 @@ let ``windowed with valid arguments`` (source: string) size =
 let ``windowed with invalid arguments throws ArgumentException`` (source: string) size =
     Assert.That(Func<_>(fun () -> source.AsMemory() |> Memory.windowed size),
         Throws.TypeOf<ArgumentException>())
+
+let forall_TestParameters =
+    [
+        "",      (fun (x: char) -> int x % 2 = 0), true
+        "02468", (fun (x: char) -> int x % 2 = 0), true
+        "02468", (fun (x: char) -> int x % 2 = 1), false
+        "13579", (fun (x: char) -> int x % 2 = 0), false
+        "13579", (fun (x: char) -> int x % 2 = 1), true
+    ]
+    |> List.map (fun (source, predicate, expected) ->
+        TestCaseData(source, predicate).Returns(expected))
+
+[<TestCaseSource("forall_TestParameters")>]
+let ``forall with various arguments`` (source: string) predicate =
+    source.AsMemory() |> Memory.forall predicate
+
+let forall2_TestParameters =
+    [
+        "",      "23", None
+        "12345", "23", Some 1
+        "12345", "56", None
+    ]
+    |> List.map (fun (source, pattern, expected) ->
+        TestCaseData(source, pattern).Returns(expected))
+
+[<TestCaseSource("forall2_TestParameters")>]
+let ``forall2 with various arguments`` (source: string) (pattern: string) =
+    source.AsMemory()
+    |> Memory.windowed 2
+    |> Seq.tryFindIndex (fun t ->
+        (t, pattern.AsMemory())
+        ||> Memory.forall2 (=))

@@ -36,3 +36,22 @@ module Memory =
             for i in 0 .. source.Length - windowSize do
                 yield source.Slice(i, windowSize)
         }
+
+    let forall predicate (source: ReadOnlyMemory<'T>) =
+        let mutable result = true
+        let mutable en = source.Span.GetEnumerator()
+
+        while en.MoveNext() && result do
+            result <- predicate en.Current
+
+        result
+
+    let forall2 predicate (source1: ReadOnlyMemory<'T1>) (source2: ReadOnlyMemory<'T2>) =
+        let mutable result = true
+        let mutable en1 = source1.Span.GetEnumerator()
+        let mutable en2 = source2.Span.GetEnumerator()
+
+        while en1.MoveNext() && en2.MoveNext() && result do
+            result <- predicate en1.Current en2.Current
+
+        result
