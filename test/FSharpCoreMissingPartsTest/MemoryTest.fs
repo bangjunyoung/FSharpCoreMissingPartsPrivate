@@ -29,22 +29,30 @@ open System
 open NUnit.Framework
 
 [<Test>]
-let ``windowed with empty source`` () =
+let ``windowed with empty source returns empty Seq`` () =
     Assert.That("".AsMemory() |> Memory.windowed 1, Is.EqualTo Seq.empty)
 
-[<TestCase("1234", 1, ExpectedResult = [|"1"; "2"; "3"; "4"|])>]
-[<TestCase("1234", 2, ExpectedResult = [|"12"; "23"; "34"|])>]
-[<TestCase("1234", 3, ExpectedResult = [|"123"; "234"|])>]
-[<TestCase("1234", 4, ExpectedResult = [|"1234"|])>]
-[<TestCase("1234", 5, ExpectedResult = [||])>]
+let windowed_TestParamters =
+    [
+        "1234", 1, [|"1"; "2"; "3"; "4"|]
+        "1234", 2, [|"12"; "23"; "34"|]
+        "1234", 3, [|"123"; "234"|]
+        "1234", 4, [|"1234"|]
+        "1234", 5, [||]
+    ]
+    |> List.map (fun (source, predicate, expected) ->
+        TestCaseData(source, predicate).Returns(expected)
+            .SetName(sprintf "{0} |> windowed {1} returns %A" expected))
+
+[<TestCaseSource("windowed_TestParamters")>]
 let ``windowed with valid arguments`` (source: string) size =
     source.AsMemory()
     |> Memory.windowed size
     |> Seq.map string
 
-[<TestCase("1234", 0)>]
-let ``windowed with invalid arguments throws ArgumentException`` (source: string) size =
-    Assert.That(Func<_>(fun () -> source.AsMemory() |> Memory.windowed size),
+[<Test>]
+let ``windowed with windowSize <= 0 throws ArgumentException`` () =
+    Assert.That(Func<_>(fun () -> "123".AsMemory() |> Memory.windowed 0),
         Throws.TypeOf<ArgumentException>())
 
 let forall_TestParameters =
@@ -64,9 +72,9 @@ let ``forall with various arguments`` (source: string) predicate =
 
 let forall2_TestParameters =
     [
-        "",      "23", None
-        "12345", "23", Some 1
-        "12345", "56", None
+        "",     "23", None
+        "1234", "23", Some 1
+        "1234", "45", None
     ]
     |> List.map (fun (source, pattern, expected) ->
         TestCaseData(source, pattern).Returns(expected))
@@ -77,4 +85,15 @@ let ``forall2 with various arguments`` (source: string) (pattern: string) =
     |> Memory.windowed 2
     |> Seq.tryFindIndex (fun t ->
         (t, pattern.AsMemory())
+        ||> Memory.forall2 (=))
+
+[<Test>]
+let ``forall2 with two empty sources returns true`` () =
+    Assert.That(("".AsMemory(), "".AsMemory()) ||> Memory.forall2 (=))
+
+[<Test>]
+let ``forall2 with two sources of different lengths`` () =
+    Assert.That(("123".AsMemory(), "1234".AsMemory()) ||> Memory.forall2 (=))
+    Assert.That(
+        (ReadOnlyMemory [|1 .. 4|], ReadOnlyMemory [|1 .. 3|])
         ||> Memory.forall2 (=))
