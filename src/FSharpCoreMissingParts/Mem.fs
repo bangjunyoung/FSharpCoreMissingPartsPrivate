@@ -27,8 +27,20 @@ namespace FSharpCoreMissingParts
 
 open System
 
-module Memory =
-    let windowed windowSize (source: ReadOnlyMemory<'T>) =
+type Mem<'T> = ReadOnlyMemory<'T>
+
+module Mem =
+    let ofArray (source: 'T[]) = Mem source
+
+    let ofArraySlice startIndex length (source: 'T[]) =
+        Mem(source, startIndex, length)
+
+    let ofString (source: string) : Mem<_> = source.AsMemory()
+
+    let ofStringSlice startIndex length (source: string) : Mem<_> =
+        source.AsMemory(startIndex, length)
+
+    let windowed windowSize (source: Mem<'T>) : Mem<'T> seq =
         if windowSize <= 0 then
             invalidArg "windowSize" <| sprintf "%d must be positive." windowSize
 
@@ -37,7 +49,7 @@ module Memory =
                 yield source.Slice(i, windowSize)
         }
 
-    let forall predicate (source: ReadOnlyMemory<'T>) =
+    let forall predicate (source: Mem<'T>) =
         let mutable result = true
         let mutable en = source.Span.GetEnumerator()
 
@@ -46,7 +58,7 @@ module Memory =
 
         result
 
-    let forall2 predicate (source1: ReadOnlyMemory<'T1>) (source2: ReadOnlyMemory<'T2>) =
+    let forall2 predicate (source1: Mem<'T1>) (source2: Mem<'T2>) =
         let mutable result = true
         let mutable en1 = source1.Span.GetEnumerator()
         let mutable en2 = source2.Span.GetEnumerator()

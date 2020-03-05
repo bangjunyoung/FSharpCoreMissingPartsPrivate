@@ -21,7 +21,7 @@
     <Compile Include="Cycle.fs" />
     <Compile Include="NaturalSort.fs" />
     <Compile Include="Nullable.fs" />
-    <Compile Include="Memory.fs" />
+    <Compile Include="Mem.fs" />
   </ItemGroup>
 
 </Project>

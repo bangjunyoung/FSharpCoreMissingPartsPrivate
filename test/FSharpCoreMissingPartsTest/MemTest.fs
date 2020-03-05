@@ -23,16 +23,16 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.MemoryTest
+module FSharpCoreMissingParts.MemTest
 
 open System
 open NUnit.Framework
 
 [<Test>]
 let ``windowed with empty source returns empty Seq`` () =
-    Assert.That("".AsMemory() |> Memory.windowed 1, Is.EqualTo Seq.empty)
+    Assert.That("" |> Mem.ofString |> Mem.windowed 1, Is.EqualTo Seq.empty)
 
-let windowed_TestParamters =
+let windowedTestParamters =
     [
         "1234", 1, [|"1"; "2"; "3"; "4"|]
         "1234", 2, [|"12"; "23"; "34"|]
@@ -44,18 +44,19 @@ let windowed_TestParamters =
         TestCaseData(source, predicate).Returns(expected)
             .SetName(sprintf "{0} |> windowed {1} returns %A" expected))
 
-[<TestCaseSource("windowed_TestParamters")>]
+[<TestCaseSource("windowedTestParamters")>]
 let ``windowed with valid arguments`` (source: string) size =
-    source.AsMemory()
-    |> Memory.windowed size
+    source
+    |> Mem.ofString
+    |> Mem.windowed size
     |> Seq.map string
 
 [<Test>]
 let ``windowed with windowSize <= 0 throws ArgumentException`` () =
-    Assert.That(Func<_>(fun () -> "123".AsMemory() |> Memory.windowed 0),
+    Assert.That(Func<_>(fun () -> "123".AsMemory() |> Mem.windowed 0),
         Throws.TypeOf<ArgumentException>())
 
-let forall_TestParameters =
+let forallTestParameters =
     [
         "",      (fun (x: char) -> int x % 2 = 0), true
         "02468", (fun (x: char) -> int x % 2 = 0), true
@@ -66,11 +67,11 @@ let forall_TestParameters =
     |> List.map (fun (source, predicate, expected) ->
         TestCaseData(source, predicate).Returns(expected))
 
-[<TestCaseSource("forall_TestParameters")>]
-let ``forall with various arguments`` (source: string) predicate =
-    source.AsMemory() |> Memory.forall predicate
+[<TestCaseSource("forallTestParameters")>]
+let ``forall with various arguments`` source predicate =
+    source |> Mem.ofString |> Mem.forall predicate
 
-let forall2_TestParameters =
+let forall2TestParameters =
     [
         "",     "23", None
         "1234", "23", Some 1
@@ -79,21 +80,23 @@ let forall2_TestParameters =
     |> List.map (fun (source, pattern, expected) ->
         TestCaseData(source, pattern).Returns(expected))
 
-[<TestCaseSource("forall2_TestParameters")>]
-let ``forall2 with various arguments`` (source: string) (pattern: string) =
-    source.AsMemory()
-    |> Memory.windowed 2
+[<TestCaseSource("forall2TestParameters")>]
+let ``forall2 with various arguments`` source pattern =
+    source
+    |> Mem.ofString
+    |> Mem.windowed 2
     |> Seq.tryFindIndex (fun t ->
-        (t, pattern.AsMemory())
-        ||> Memory.forall2 (=))
+        (t, Mem.ofString pattern)
+        ||> Mem.forall2 (=))
 
 [<Test>]
 let ``forall2 with two empty sources returns true`` () =
-    Assert.That(("".AsMemory(), "".AsMemory()) ||> Memory.forall2 (=))
+    Assert.That((Mem.ofString "", Mem.ofString "")
+                ||> Mem.forall2 (=))
 
 [<Test>]
 let ``forall2 with two sources of different lengths`` () =
-    Assert.That(("123".AsMemory(), "1234".AsMemory()) ||> Memory.forall2 (=))
-    Assert.That(
-        (ReadOnlyMemory [|1 .. 4|], ReadOnlyMemory [|1 .. 3|])
-        ||> Memory.forall2 (=))
+    Assert.That((Mem.ofString "123", Mem.ofString "1234")
+                ||> Mem.forall2 (=))
+    Assert.That((Mem.ofArray [|1 .. 4|], Mem.ofArray [|1 .. 3|])
+                ||> Mem.forall2 (=))

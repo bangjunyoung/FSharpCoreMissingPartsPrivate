@@ -21,7 +21,7 @@
     <Compile Include="CycleTest.fs" />
     <Compile Include="NaturalSortTest.fs" />
     <Compile Include="NullableTest.fs" />
-    <Compile Include="MemoryTest.fs" />
+    <Compile Include="MemTest.fs" />
   </ItemGroup>
 
   <ItemGroup>
