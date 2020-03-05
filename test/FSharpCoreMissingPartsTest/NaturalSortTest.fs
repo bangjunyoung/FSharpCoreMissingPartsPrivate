@@ -36,5 +36,5 @@ let testParameters =
         TestCaseData(source).Returns(expected))
 
 [<TestCaseSource("testParameters")>]
-let ``sort with valid arguments`` (source: string list) =
+let ``sort with valid arguments`` source =
     NaturalSort.sort source
