@@ -25,6 +25,7 @@
 
 module FSharpCoreMissingParts.StringTest
 
+open System
 open NUnit.Framework
 
 let ofSeqTestParameters =
@@ -44,3 +45,26 @@ let ofSeqTestParameters =
 [<TestCaseSource("ofSeqTestParameters")>]
 let ``ofSeq with valid arguments`` source =
     source |> String.ofSeq
+
+let truncateTestParameters =
+    [
+        0, "", ""
+        1, "1", "1"
+        1, "12", "…"
+        0, "123", ""
+        1, "123", "…"
+        2, "123", "1…"
+        3, "123", "123"
+        4, "123", "123"
+    ]
+    |> Seq.map (fun (count, source, expected) ->
+        TestCaseData(count, source).Returns(expected))
+
+[<TestCaseSource("truncateTestParameters")>]
+let ``truncate with valid arguments`` count source =
+    source |> String.truncate count
+
+[<Test>]
+let ``truncate throws ArgumentException if count < 0`` () =
+    Assert.That(Func<_>(fun () -> "123" |> String.truncate (-1)),
+        Throws.TypeOf<ArgumentException>())
