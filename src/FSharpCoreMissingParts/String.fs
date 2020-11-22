@@ -26,10 +26,11 @@
 namespace FSharpCoreMissingParts
 
 open System
+open System.Text
 
 module String =
     let ofSeq (source: seq<char>) =
-        (System.Text.StringBuilder(Seq.length source), source)
+        (StringBuilder(Seq.length source), source)
         ||> Seq.fold (fun builder c -> builder.Append(c))
         |> string
 
@@ -40,7 +41,7 @@ module String =
         if String.length source > count then
             let ellipsis = "\u2026"
             if count >= ellipsis.Length then
-                System.Text.StringBuilder(count)
+                StringBuilder(count)
                     .Append(source.AsSpan(0, count - ellipsis.Length))
                     .Append(ellipsis)
                     .ToString()
