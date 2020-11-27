@@ -29,7 +29,7 @@ open System
 open NUnit.Framework
 
 [<Test>]
-let ``windowed with empty source returns empty Seq`` () =
+let ``windowed with an empty source returns an empty Seq`` () =
     Assert.That("" |> Mem.ofString |> Mem.windowed 1, Is.EqualTo Seq.empty)
 
 let windowedTestParamters =
