@@ -34,18 +34,18 @@ module String =
         ||> Seq.fold (fun builder c -> builder.Append(c))
         |> string
 
-    let truncate count source =
-        if count < 0 then
-            invalidArg "count" <| sprintf "%d must be positive." count
+    let ellipsize length source =
+        if length < 0 then
+            invalidArg (nameof length) $"{nameof length} must be positive, but {length} is given."
 
-        if String.length source > count then
+        if String.length source > length then
             let ellipsis = "\u2026"
-            if count >= ellipsis.Length then
-                StringBuilder(count)
-                    .Append(source.AsSpan(0, count - ellipsis.Length))
+            if length >= ellipsis.Length then
+                StringBuilder(length)
+                    .Append(source.AsSpan(0, length - ellipsis.Length))
                     .Append(ellipsis)
                     .ToString()
             else
-                source.Substring(0, count)
+                source.Substring(0, length)
         else
             source

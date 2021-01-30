@@ -46,7 +46,7 @@ let ofSeqTestParameters =
 let ``ofSeq with valid arguments`` source =
     source |> String.ofSeq
 
-let truncateTestParameters =
+let ellipsizeTestParameters =
     [
         0, "", ""
         1, "1", "1"
@@ -57,14 +57,14 @@ let truncateTestParameters =
         3, "123", "123"
         4, "123", "123"
     ]
-    |> Seq.map (fun (count, source, expected) ->
-        TestCaseData(count, source).Returns(expected))
+    |> Seq.map (fun (length, source, expected) ->
+        TestCaseData(length, source).Returns(expected))
 
-[<TestCaseSource("truncateTestParameters")>]
-let ``truncate with valid arguments`` count source =
-    source |> String.truncate count
+[<TestCaseSource("ellipsizeTestParameters")>]
+let ``ellipsize with valid arguments`` length source =
+    source |> String.ellipsize length
 
 [<Test>]
-let ``truncate throws ArgumentException if count < 0`` () =
-    Assert.That(Func<_>(fun () -> "123" |> String.truncate (-1)),
+let ``ellipsize throws ArgumentException if length < 0`` () =
+    Assert.That(Func<_>(fun () -> "123" |> String.ellipsize (-1)),
         Throws.TypeOf<ArgumentException>())
