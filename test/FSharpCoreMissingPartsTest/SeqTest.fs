@@ -27,32 +27,32 @@ module FSharpCoreMissingParts.SeqTest
 
 open NUnit.Framework
 
-let isOrderedAscendingTestParameters =
+let isOrderedTestParameters =
     [
-        [], true
-        [1], true
-        [1; 1], true
-        [1; 2; 3], true
-        [1; 3; 2], false
+        Ascending, [], true
+        Ascending, [1], true
+        Ascending, [1; 1], true
+        Ascending, [1; 2; 3], true
+        Ascending, [1; 3; 2], false
+        Descending, [], true
+        Descending, [1], true
+        Descending, [1; 1], true
+        Descending, [3; 1; 2], false
+        Descending, [3; 2; 1], true
+        StrictAscending, [], true
+        StrictAscending, [1], true
+        StrictAscending, [1; 1], false
+        StrictAscending, [1; 2; 3], true
+        StrictAscending, [1; 3; 2], false
+        StrictDescending, [], true
+        StrictDescending, [1], true
+        StrictDescending, [1; 1], false
+        StrictDescending, [3; 1; 2], false
+        StrictDescending, [3; 2; 1], true
     ]
-    |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
+    |> List.map (fun (order, source, expected) ->
+        TestCaseData(order, source).Returns(expected))
 
-[<TestCaseSource("isOrderedAscendingTestParameters")>]
-let ``isOrderedAscending with valid arguments`` source =
-    Seq.isOrderedAscending source
-
-let isOrderedDescendingTestParameters =
-    [
-        [], true
-        [1], true
-        [1; 1], true
-        [3; 1; 2], false
-        [3; 2; 1], true
-    ]
-    |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
-
-[<TestCaseSource("isOrderedDescendingTestParameters")>]
-let ``isOrderedDescending with valid arguments`` source =
-    Seq.isOrderedDescending source
+[<TestCaseSource("isOrderedTestParameters")>]
+let ``isOrdered with valid arguments`` order source =
+    Seq.isOrdered order source

@@ -25,6 +25,12 @@
 
 namespace FSharpCoreMissingParts
 
+type SortOrder =
+    | Ascending
+    | Descending
+    | StrictAscending
+    | StrictDescending
+
 module Seq =
     let iterate f x =
         let rec loop x = seq {
@@ -51,31 +57,26 @@ module Seq =
             true
         else
             ((true, Seq.head source), Seq.tail source)
-            ||> foldSome (fun (sorted, prev) current ->
-                if sorted
-                then Some (comparer prev current <= 0, current)
-                else None)
+            ||> foldSome
+                (fun (sorted, prev) current ->
+                    if sorted
+                    then Some (comparer prev current <= 0, current)
+                    else None)
             |> fst
 
-    let isOrderedAscending source =
-        source |> isOrderedWith compare
-
-    let isOrderedDescending source =
+    let isOrdered order source =
         let reverseCompare a b = compare b a
-        source |> isOrderedWith reverseCompare
-
-    let isOrderedStrictAscending source =
         let strictCompare a b =
             match sign <| compare a b with
             | -1 -> -1
             | _ -> 1
-
-        source |> isOrderedWith strictCompare
-
-    let isOrderedStrictDescending source =
         let strictReverseCompare a b =
             match sign <| compare a b with
             | 1 -> -1
             | _ -> 1
 
-        source |> isOrderedWith strictReverseCompare
+        match order with
+        | Ascending -> isOrderedWith compare source
+        | Descending -> isOrderedWith reverseCompare source
+        | StrictAscending -> isOrderedWith strictCompare source
+        | StrictDescending -> isOrderedWith strictReverseCompare source
