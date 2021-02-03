@@ -97,5 +97,5 @@ let ``type conversion to valid types`` () =
 
 [<Test>]
 let ``Null-coalescing operator`` () =
-    Assert.That(Value 19 + Value 23 .| 84, Is.EqualTo 42)
-    Assert.That(Value 19 + Null .| 42, Is.EqualTo 42)
+    Assert.That(Value 19 + Value 23 |??| 84, Is.EqualTo 42)
+    Assert.That(Value 19 + Null |??| 42, Is.EqualTo 42)
