@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright 2019 Bang Jun-young
 // All rights reserved.
 //
@@ -23,22 +23,33 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace FSharpCoreMissingParts
+module FSharpCoreMissingParts.CycleTest
 
-type CycleNode<'T> internal (item: 'T) as this =
-    let mutable next = this
-    member __.Value = item
-    member __.Next
-        with get() = next
-        and internal set value = next <- value
+open NUnit.Framework
 
-module Cycle =
-    let value (node: CycleNode<_>) = node.Value
-    let next (node: CycleNode<_>) = node.Next
+let valueTestParameters =
+    let boxList = [box 1; box 2]
+    let cycle = CircularList.ofList boxList
+    [
+        (fun () -> cycle |> CircularList.value), boxList.[0]
+        (fun () -> cycle |> CircularList.next |> CircularList.value), boxList.[1]
+        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[0]
+        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[1]
 
-    let ofList source =
-        source
-        |> List.map CycleNode
-        |> List.pairwiseCyclic
-        |> List.map (fun (x, y) -> x.Next <- y; x)
-        |> List.head
+        (fun () -> cycle.Value), boxList.[0]
+        (fun () -> cycle.Next.Value), boxList.[1]
+        (fun () -> cycle.Next.Next.Value), boxList.[0]
+        (fun () -> cycle.Next.Next.Next.Value), boxList.[1]
+    ]
+    |> List.map (fun (expr, expected) ->
+        TestCaseData(expr).Returns(expected))
+
+[<TestCaseSource("valueTestParameters")>]
+let ``value with valid arguments`` (f: unit -> obj) =
+    f ()
+
+[<Test>]
+let ``ofList throws ArgumentException if [] is given`` () =
+    Assert.Throws<System.ArgumentException>(
+        fun () -> [] |> CircularList.ofList |> ignore)
+    |> ignore
