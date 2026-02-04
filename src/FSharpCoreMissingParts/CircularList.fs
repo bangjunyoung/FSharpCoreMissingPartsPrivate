@@ -39,6 +39,6 @@ module CircularList =
     let ofList source =
         source
         |> List.map CircularListNode
-        |> List.pairwiseCyclic
+        |> List.pairwiseWrapped
         |> List.map (fun (x, y) -> x.Next <- y; x)
         |> List.head

@@ -89,10 +89,12 @@ val it : int = 1
 
 ## List
 
-### `pairwiseCyclic`
+### `pairwiseWapped`
+
+A wrap-around version of `List.pairwise` that pairs the last element with the first.
 
 ```fsharp
-> [1 .. 3] |> List.pairwiseCyclic;;
+> [1 .. 3] |> List.pairwiseWrapped;;
 val it : (int * int) list = [(1, 2); (2, 3); (3, 1)]
 ```
 

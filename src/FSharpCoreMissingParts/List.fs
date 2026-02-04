@@ -26,12 +26,15 @@
 namespace FSharpCoreMissingParts
 
 module List =
-    let pairwiseCyclic source =
+
+    /// <summary>
+    /// A wrap-around version of List.pairwise that pairs the last element with the first.
+    /// </summary>
+    let pairwiseWrapped source =
         match source with
         | [] -> []
         | head :: _ ->
-            let rec loop source' =
-                match source' with
+            let rec loop = function
                 | [] -> []
                 | [x] -> [x, head]
                 | x :: y :: rest -> (x, y) :: loop (y :: rest)
