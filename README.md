@@ -89,7 +89,7 @@ val it : int = 1
 
 ## List
 
-### `pairwiseWapped`
+### `pairwiseWrapped`
 
 A wrap-around version of `List.pairwise` that pairs the last element with the first.
 
