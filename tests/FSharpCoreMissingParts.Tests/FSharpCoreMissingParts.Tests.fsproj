@@ -13,15 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="SeqTest.fs" />
-    <Compile Include="ArrayTest.fs" />
-    <Compile Include="Array2DTest.fs" />
-    <Compile Include="ListTest.fs" />
-    <Compile Include="StringTest.fs" />
-    <Compile Include="CircularListTest.fs" />
-    <Compile Include="NaturalSortTest.fs" />
-    <Compile Include="NullableTest.fs" />
-    <Compile Include="MemTest.fs" />
+    <Compile Include="SeqTests.fs" />
+    <Compile Include="ArrayTests.fs" />
+    <Compile Include="Array2DTests.fs" />
+    <Compile Include="ListTests.fs" />
+    <Compile Include="StringTests.fs" />
+    <Compile Include="CircularListTests.fs" />
+    <Compile Include="NaturalSortTests.fs" />
+    <Compile Include="NullableTests.fs" />
+    <Compile Include="MemTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

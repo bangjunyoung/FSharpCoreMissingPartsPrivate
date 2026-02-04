@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.MemTest
+module FSharpCoreMissingParts.MemTests
 
 open System
 open NUnit.Framework

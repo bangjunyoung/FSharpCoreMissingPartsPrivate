@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.NullableTest
+module FSharpCoreMissingParts.NullableTests
 
 open NUnit.Framework
 open FSharpCoreMissingParts.Nullable

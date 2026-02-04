@@ -23,48 +23,33 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.StringTest
+module FSharpCoreMissingParts.CircularListTests
 
-open System
 open NUnit.Framework
 
-let ofSeqTestParameters =
+let valueTestParameters =
+    let boxList = [box 1; box 2]
+    let cycle = CircularList.ofList boxList
     [
-        Seq.empty, ""
-        seq [], ""
-        seq [||], ""
-        seq [|'a'|], "a"
-        seq ['b'], "b"
-        seq { yield 'c'}, "c"
-        seq ['d'; 'e'], "de"
-        seq [|'f'; 'g'; 'h'|], "fgh"
+        (fun () -> cycle |> CircularList.value), boxList.[0]
+        (fun () -> cycle |> CircularList.next |> CircularList.value), boxList.[1]
+        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[0]
+        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[1]
+
+        (fun () -> cycle.Value), boxList.[0]
+        (fun () -> cycle.Next.Value), boxList.[1]
+        (fun () -> cycle.Next.Next.Value), boxList.[0]
+        (fun () -> cycle.Next.Next.Next.Value), boxList.[1]
     ]
-    |> Seq.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
+    |> List.map (fun (expr, expected) ->
+        TestCaseData(expr).Returns(expected))
 
-[<TestCaseSource("ofSeqTestParameters")>]
-let ``ofSeq with valid arguments`` source =
-    source |> String.ofSeq
-
-let ellipsizeTestParameters =
-    [
-        0, "", ""
-        1, "1", "1"
-        1, "12", "…"
-        0, "123", ""
-        1, "123", "…"
-        2, "123", "1…"
-        3, "123", "123"
-        4, "123", "123"
-    ]
-    |> Seq.map (fun (length, source, expected) ->
-        TestCaseData(length, source).Returns(expected))
-
-[<TestCaseSource("ellipsizeTestParameters")>]
-let ``ellipsize with valid arguments`` length source =
-    source |> String.ellipsize length
+[<TestCaseSource("valueTestParameters")>]
+let ``value with valid arguments`` (f: unit -> obj) =
+    f ()
 
 [<Test>]
-let ``ellipsize throws ArgumentException if length < 0`` () =
-    Assert.That(Func<_>(fun () -> "123" |> String.ellipsize (-1)),
-        Throws.TypeOf<ArgumentException>())
+let ``ofList throws ArgumentException if [] is given`` () =
+    Assert.Throws<System.ArgumentException>(
+        fun () -> [] |> CircularList.ofList |> ignore)
+    |> ignore

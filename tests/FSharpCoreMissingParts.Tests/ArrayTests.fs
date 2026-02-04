@@ -23,18 +23,33 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.NaturalSortTest
+module FSharpCoreMissingParts.ArrayTests
 
 open NUnit.Framework
 
-let testParameters =
+let tryBinarySearchTestParameters =
     [
-        (["z10"; "z"; "z1"; "z012"; "zz"; "z21"; "z2"],
-         ["z"; "z1"; "z2"; "z10"; "z012"; "z21"; "zz"])
+        [||], 42, None
+        [|1 .. 50|], 51, None
+        [|1 .. 50|], 42, Some 41
     ]
-    |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
+    |> List.map (fun (source, value, expected) ->
+        TestCaseData(source, value).Returns(expected))
 
-[<TestCaseSource("testParameters")>]
-let ``sort with valid arguments`` source =
-    NaturalSort.sort source
+[<TestCaseSource("tryBinarySearchTestParameters")>]
+let ``tryBinarySearch with valid arguments`` (source: int[]) value =
+    source |> Array.tryBinarySearch value
+
+let tryBinarySearchWithTestParameters =
+    [
+        [||], 42, None
+        [|50 .. -1 .. 1|], 51, None
+        [|50 .. -1 .. 1|], 42, Some 8
+    ]
+    |> List.map (fun (source, value, expected) ->
+        TestCaseData(source, value).Returns(expected))
+
+[<TestCaseSource("tryBinarySearchWithTestParameters")>]
+let ``tryBinarySearchWith with valid arguments`` (source: int[]) value =
+    let reverseCompare a b = compare b a
+    source |> Array.tryBinarySearchWith reverseCompare value

@@ -23,34 +23,36 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.Array2DTest
+module FSharpCoreMissingParts.SeqTests
 
 open NUnit.Framework
 
-let ofArrayTestParameters =
+let isOrderedTestParameters =
     [
-        [||], 0, 0, array2D [| [||] |]
-        [|1|], 1, 1, array2D [| [|1|] |]
-        [|1 .. 6|], 3, 2, array2D [| [|1; 2|]; [|3; 4|]; [|5; 6|] |]
-        [|1 .. 6|], 2, 3, array2D [| [|1; 2; 3|]; [|4; 5; 6|] |]
+        Ascending, [], true
+        Ascending, [1], true
+        Ascending, [1; 1], true
+        Ascending, [1; 2; 3], true
+        Ascending, [1; 3; 2], false
+        Descending, [], true
+        Descending, [1], true
+        Descending, [1; 1], true
+        Descending, [3; 1; 2], false
+        Descending, [3; 2; 1], true
+        StrictAscending, [], true
+        StrictAscending, [1], true
+        StrictAscending, [1; 1], false
+        StrictAscending, [1; 2; 3], true
+        StrictAscending, [1; 3; 2], false
+        StrictDescending, [], true
+        StrictDescending, [1], true
+        StrictDescending, [1; 1], false
+        StrictDescending, [3; 1; 2], false
+        StrictDescending, [3; 2; 1], true
     ]
-    |> List.map (fun (source, nrows, ncols, expected) ->
-        TestCaseData(source, nrows, ncols).Returns(expected))
+    |> List.map (fun (order, source, expected) ->
+        TestCaseData(order, source).Returns(expected))
 
-[<TestCaseSource("ofArrayTestParameters")>]
-let ``ofArray with valid arguments`` (source: int[]) nrows ncols =
-    source |> Array2D.ofArray nrows ncols
-
-let toArrayTestParameters =
-    [
-        array2D [| [||] |], [||]
-        array2D [| [|1|] |], [|1|]
-        array2D [| [|1; 2|]; [|3; 4|]; [|5; 6|] |], [|1 .. 6|]
-        array2D [| [|1; 2; 3|]; [|4; 5; 6|] |], [|1 .. 6|]
-    ]
-    |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
-
-[<TestCaseSource("toArrayTestParameters")>]
-let ``toArray with valid arguments`` (source: int[,]) =
-    source |> Array2D.toArray
+[<TestCaseSource("isOrderedTestParameters")>]
+let ``isOrdered with valid arguments`` order source =
+    Seq.isOrdered order source

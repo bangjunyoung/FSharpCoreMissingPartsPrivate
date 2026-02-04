@@ -23,33 +23,18 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.CycleTest
+module FSharpCoreMissingParts.NaturalSortTests
 
 open NUnit.Framework
 
-let valueTestParameters =
-    let boxList = [box 1; box 2]
-    let cycle = CircularList.ofList boxList
+let testParameters =
     [
-        (fun () -> cycle |> CircularList.value), boxList.[0]
-        (fun () -> cycle |> CircularList.next |> CircularList.value), boxList.[1]
-        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[0]
-        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[1]
-
-        (fun () -> cycle.Value), boxList.[0]
-        (fun () -> cycle.Next.Value), boxList.[1]
-        (fun () -> cycle.Next.Next.Value), boxList.[0]
-        (fun () -> cycle.Next.Next.Next.Value), boxList.[1]
+        (["z10"; "z"; "z1"; "z012"; "zz"; "z21"; "z2"],
+         ["z"; "z1"; "z2"; "z10"; "z012"; "z21"; "zz"])
     ]
-    |> List.map (fun (expr, expected) ->
-        TestCaseData(expr).Returns(expected))
+    |> List.map (fun (source, expected) ->
+        TestCaseData(source).Returns(expected))
 
-[<TestCaseSource("valueTestParameters")>]
-let ``value with valid arguments`` (f: unit -> obj) =
-    f ()
-
-[<Test>]
-let ``ofList throws ArgumentException if [] is given`` () =
-    Assert.Throws<System.ArgumentException>(
-        fun () -> [] |> CircularList.ofList |> ignore)
-    |> ignore
+[<TestCaseSource("testParameters")>]
+let ``sort with valid arguments`` source =
+    NaturalSort.sort source

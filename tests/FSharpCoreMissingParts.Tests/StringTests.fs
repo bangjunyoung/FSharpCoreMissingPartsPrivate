@@ -23,31 +23,48 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.ListTest
+module FSharpCoreMissingParts.StringTests
 
+open System
 open NUnit.Framework
 
-[<Test>]
-let ``pairwiseCyclic returns [] if [] is given`` () =
-    Assert.That([] |> List.pairwiseCyclic, Is.EqualTo [])
-
-let pairwiseCyclicTestParameters =
+let ofSeqTestParameters =
     [
-        [], []
-        [1], [1, 1]
-        [1; 2; 3], [1, 2; 2, 3; 3, 1]
+        Seq.empty, ""
+        seq [], ""
+        seq [||], ""
+        seq [|'a'|], "a"
+        seq ['b'], "b"
+        seq { yield 'c'}, "c"
+        seq ['d'; 'e'], "de"
+        seq [|'f'; 'g'; 'h'|], "fgh"
     ]
-    |> List.map (fun (source, expected) ->
+    |> Seq.map (fun (source, expected) ->
         TestCaseData(source).Returns(expected))
 
-[<TestCaseSource("pairwiseCyclicTestParameters")>]
-let ``pairwiseCyclic with valid arguments`` source =
-    source |> List.pairwiseCyclic
+[<TestCaseSource("ofSeqTestParameters")>]
+let ``ofSeq with valid arguments`` source =
+    source |> String.ofSeq
+
+let ellipsizeTestParameters =
+    [
+        0, "", ""
+        1, "1", "1"
+        1, "12", "…"
+        0, "123", ""
+        1, "123", "…"
+        2, "123", "1…"
+        3, "123", "123"
+        4, "123", "123"
+    ]
+    |> Seq.map (fun (length, source, expected) ->
+        TestCaseData(length, source).Returns(expected))
+
+[<TestCaseSource("ellipsizeTestParameters")>]
+let ``ellipsize with valid arguments`` length source =
+    source |> String.ellipsize length
 
 [<Test>]
-let ``crossMap is equivalent to allPairs + map`` () =
-    let source = [1 .. 10], [11 .. 20]
-    let actual = source ||> List.crossMap (fun (x, y) -> x + y)
-    let expected = source ||> List.allPairs |> List.map (fun (x, y) -> x + y)
-
-    Assert.That(actual, Is.EqualTo expected)
+let ``ellipsize throws ArgumentException if length < 0`` () =
+    Assert.That(Func<_>(fun () -> "123" |> String.ellipsize (-1)),
+        Throws.TypeOf<ArgumentException>())

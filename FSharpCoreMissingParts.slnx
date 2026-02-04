@@ -3,5 +3,5 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="src/FSharpCoreMissingParts/FSharpCoreMissingParts.fsproj" />
-  <Project Path="test/FSharpCoreMissingPartsTest/FSharpCoreMissingPartsTest.fsproj" />
+  <Project Path="tests/FSharpCoreMissingParts.Tests/FSharpCoreMissingParts.Tests.fsproj" />
 </Solution>

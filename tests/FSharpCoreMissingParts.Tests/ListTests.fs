@@ -23,33 +23,31 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module FSharpCoreMissingParts.ArrayTest
+module FSharpCoreMissingParts.ListTests
 
 open NUnit.Framework
 
-let tryBinarySearchTestParameters =
+[<Test>]
+let ``pairwiseCyclic returns [] if [] is given`` () =
+    Assert.That([] |> List.pairwiseCyclic, Is.EqualTo [])
+
+let pairwiseCyclicTestParameters =
     [
-        [||], 42, None
-        [|1 .. 50|], 51, None
-        [|1 .. 50|], 42, Some 41
+        [], []
+        [1], [1, 1]
+        [1; 2; 3], [1, 2; 2, 3; 3, 1]
     ]
-    |> List.map (fun (source, value, expected) ->
-        TestCaseData(source, value).Returns(expected))
+    |> List.map (fun (source, expected) ->
+        TestCaseData(source).Returns(expected))
 
-[<TestCaseSource("tryBinarySearchTestParameters")>]
-let ``tryBinarySearch with valid arguments`` (source: int[]) value =
-    source |> Array.tryBinarySearch value
+[<TestCaseSource("pairwiseCyclicTestParameters")>]
+let ``pairwiseCyclic with valid arguments`` source =
+    source |> List.pairwiseCyclic
 
-let tryBinarySearchWithTestParameters =
-    [
-        [||], 42, None
-        [|50 .. -1 .. 1|], 51, None
-        [|50 .. -1 .. 1|], 42, Some 8
-    ]
-    |> List.map (fun (source, value, expected) ->
-        TestCaseData(source, value).Returns(expected))
+[<Test>]
+let ``crossMap is equivalent to allPairs + map`` () =
+    let source = [1 .. 10], [11 .. 20]
+    let actual = source ||> List.crossMap (fun (x, y) -> x + y)
+    let expected = source ||> List.allPairs |> List.map (fun (x, y) -> x + y)
 
-[<TestCaseSource("tryBinarySearchWithTestParameters")>]
-let ``tryBinarySearchWith with valid arguments`` (source: int[]) value =
-    let reverseCompare a b = compare b a
-    source |> Array.tryBinarySearchWith reverseCompare value
+    Assert.That(actual, Is.EqualTo expected)
