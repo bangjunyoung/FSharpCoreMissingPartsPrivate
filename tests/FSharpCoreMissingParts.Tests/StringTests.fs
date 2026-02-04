@@ -68,3 +68,17 @@ let ``ellipsize with valid arguments`` length source =
 let ``ellipsize throws ArgumentException if length < 0`` () =
     Assert.That(Func<_>(fun () -> "123" |> String.ellipsize (-1)),
         Throws.TypeOf<ArgumentException>())
+
+let suffixesTestParameters =
+    [
+        "", []
+        "산", ["산"]
+        "강산", ["강산"; "산"]
+        "금강산", ["금강산"; "강산"; "산"]
+    ]
+    |> Seq.map (fun (source, expected) ->
+        TestCaseData(source).Returns(expected))
+
+[<TestCaseSource(nameof suffixesTestParameters)>]
+let ``suffixes with valid arguments`` source =
+    source |> String.suffixes |> Seq.toList

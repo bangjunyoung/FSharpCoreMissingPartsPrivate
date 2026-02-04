@@ -49,3 +49,17 @@ module String =
                 source.Substring(0, length)
         else
             source
+
+    /// <summary>
+    /// Generates all suffixes of the string, from longest to shortest.
+    /// </summary>
+    ///
+    /// <param name="str">The input string to extract suffixes from.</param>
+    ///
+    /// <returns>A sequence of suffixes.</returns>
+    let suffixes str =
+        str
+        |> Seq.unfold (fun s ->
+            match String.length s with
+            | 0 -> None
+            | _ -> Some (s, s.Substring 1))

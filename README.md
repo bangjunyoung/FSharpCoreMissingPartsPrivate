@@ -152,3 +152,11 @@ Shortens the specified string to the specified length. The last character is rep
 > "abcde" |> String.ellipsize 3;;
 val it : string = "ab…"
 ```
+
+### `suffixes`
+
+Generates all suffixes of the string, from longest to shortest.
+```fsharp
+> "bjy" |> String.suffixes;;
+val it : string seq = seq ["bjy"; "jy"; "y"]
+```
