@@ -47,7 +47,7 @@ let validIntTestParameters =
     |> List.map (fun (expr, expected) ->
         TestCaseData(expr).Returns(expected))
 
-[<TestCaseSource("validIntTestParameters")>]
+[<TestCaseSource(nameof validIntTestParameters)>]
 let ``operation with valid int operands`` (expr: unit -> FSharpNullable<int>) =
     expr ()
 
@@ -70,7 +70,7 @@ let validInt64TestParameters =
     |> List.map (fun (expr, expected) ->
         TestCaseData(expr).Returns(expected))
 
-[<TestCaseSource("validInt64TestParameters")>]
+[<TestCaseSource(nameof validInt64TestParameters)>]
 let ``operation with valid int64 operands`` (expr: unit -> FSharpNullable<int64>) =
     expr ()
 
@@ -83,7 +83,7 @@ let nullTestParameters =
     |> List.map (fun (expr, expected) ->
         TestCaseData(expr).Returns(expected))
 
-[<TestCaseSource("nullTestParameters")>]
+[<TestCaseSource(nameof nullTestParameters)>]
 let ``operation evaluates to Null if any operand is Null`` (expr: unit -> FSharpNullable<int>) =
     expr ()
 

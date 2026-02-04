@@ -44,7 +44,7 @@ let windowedTestParamters =
         TestCaseData(source, predicate).Returns(expected)
             .SetName(sprintf "{0} |> windowed {1} returns %A" expected))
 
-[<TestCaseSource("windowedTestParamters")>]
+[<TestCaseSource(nameof windowedTestParamters)>]
 let ``windowed with valid arguments`` (source: string) size =
     source
     |> Mem.ofString
@@ -67,7 +67,7 @@ let forallTestParameters =
     |> List.map (fun (source, predicate, expected) ->
         TestCaseData(source, predicate).Returns(expected))
 
-[<TestCaseSource("forallTestParameters")>]
+[<TestCaseSource(nameof forallTestParameters)>]
 let ``forall with various arguments`` source predicate =
     source |> Mem.ofString |> Mem.forall predicate
 
@@ -80,7 +80,7 @@ let forall2TestParameters =
     |> List.map (fun (source, pattern, expected) ->
         TestCaseData(source, pattern).Returns(expected))
 
-[<TestCaseSource("forall2TestParameters")>]
+[<TestCaseSource(nameof forall2TestParameters)>]
 let ``forall2 with various arguments`` source pattern =
     source
     |> Mem.ofString

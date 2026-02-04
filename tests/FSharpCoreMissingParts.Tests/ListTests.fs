@@ -40,7 +40,7 @@ let pairwiseCyclicTestParameters =
     |> List.map (fun (source, expected) ->
         TestCaseData(source).Returns(expected))
 
-[<TestCaseSource("pairwiseCyclicTestParameters")>]
+[<TestCaseSource(nameof pairwiseCyclicTestParameters)>]
 let ``pairwiseCyclic with valid arguments`` source =
     source |> List.pairwiseCyclic
 

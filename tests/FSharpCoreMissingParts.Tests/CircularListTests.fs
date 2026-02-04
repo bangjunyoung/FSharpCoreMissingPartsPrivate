@@ -44,7 +44,7 @@ let valueTestParameters =
     |> List.map (fun (expr, expected) ->
         TestCaseData(expr).Returns(expected))
 
-[<TestCaseSource("valueTestParameters")>]
+[<TestCaseSource(nameof valueTestParameters)>]
 let ``value with valid arguments`` (f: unit -> obj) =
     f ()
 

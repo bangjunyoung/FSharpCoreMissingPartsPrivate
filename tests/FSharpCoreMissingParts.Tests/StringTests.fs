@@ -42,7 +42,7 @@ let ofSeqTestParameters =
     |> Seq.map (fun (source, expected) ->
         TestCaseData(source).Returns(expected))
 
-[<TestCaseSource("ofSeqTestParameters")>]
+[<TestCaseSource(nameof ofSeqTestParameters)>]
 let ``ofSeq with valid arguments`` source =
     source |> String.ofSeq
 
@@ -60,7 +60,7 @@ let ellipsizeTestParameters =
     |> Seq.map (fun (length, source, expected) ->
         TestCaseData(length, source).Returns(expected))
 
-[<TestCaseSource("ellipsizeTestParameters")>]
+[<TestCaseSource(nameof ellipsizeTestParameters)>]
 let ``ellipsize with valid arguments`` length source =
     source |> String.ellipsize length
 

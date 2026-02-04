@@ -53,6 +53,6 @@ let isOrderedTestParameters =
     |> List.map (fun (order, source, expected) ->
         TestCaseData(order, source).Returns(expected))
 
-[<TestCaseSource("isOrderedTestParameters")>]
+[<TestCaseSource(nameof isOrderedTestParameters)>]
 let ``isOrdered with valid arguments`` order source =
     Seq.isOrdered order source

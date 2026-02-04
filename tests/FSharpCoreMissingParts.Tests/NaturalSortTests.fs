@@ -35,6 +35,6 @@ let testParameters =
     |> List.map (fun (source, expected) ->
         TestCaseData(source).Returns(expected))
 
-[<TestCaseSource("testParameters")>]
+[<TestCaseSource(nameof testParameters)>]
 let ``sort with valid arguments`` source =
     NaturalSort.sort source
