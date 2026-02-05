@@ -3,13 +3,20 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Authors>Bang Jun-young</Authors>
+    <Copyright>Copyright © 2026 Bang Jun-young</Copyright>
     <Description>A library and collection of various useful functions intended to fill missing parts of the F# Core library.</Description>
+    <Version>0.1.0</Version>
+    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
-    <FileVersion>0.0.0.0</FileVersion>
-    <Version>0</Version>
-    <Copyright>Copyright © Bang Jun-young</Copyright>
+    <RepositoryUrl>https://github.com/bangjunyoung/FSharpCoreMissingParts</RepositoryUrl>
+    <PackageTags>fsharp;core;library;utilities</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="Seq.fs" />
