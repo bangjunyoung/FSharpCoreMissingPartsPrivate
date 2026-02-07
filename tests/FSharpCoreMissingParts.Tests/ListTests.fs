@@ -42,8 +42,8 @@ let ``pairwiseWrapped with valid arguments`` source =
 
 [<Test>]
 let ``crossMap is equivalent to allPairs + map`` () =
-    let source = [1 .. 10], [11 .. 20]
-    let actual = source ||> List.crossMap (fun (x, y) -> x + y)
-    let expected = source ||> List.allPairs |> List.map (fun (x, y) -> x + y)
+    let source1, source2 = [1 .. 10], [11 .. 20]
+    let actual = (source1, source2) ||> List.crossMap (fun x y -> x + y)
+    let expected = (source1, source2) ||> List.allPairs |> List.map (fun (x, y) -> x + y)
 
     Assert.That(actual, Is.EqualTo expected)
