@@ -21,7 +21,7 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
 
 module FSharpCoreMissingParts.Array2DTests
 
@@ -35,7 +35,8 @@ let ofArrayTestParameters =
         [|1 .. 6|], 2, 3, array2D [| [|1; 2; 3|]; [|4; 5; 6|] |]
     ]
     |> List.map (fun (source, nrows, ncols, expected) ->
-        TestCaseData(source, nrows, ncols).Returns(expected))
+        TestCaseData(source, nrows, ncols).Returns(expected)
+            .SetName($"ofArray {nrows} {ncols} %A{source} returns %A{expected}"))
 
 [<TestCaseSource(nameof ofArrayTestParameters)>]
 let ``ofArray with valid arguments`` (source: int[]) nrows ncols =
@@ -49,7 +50,8 @@ let toArrayTestParameters =
         array2D [| [|1; 2; 3|]; [|4; 5; 6|] |], [|1 .. 6|]
     ]
     |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
+        TestCaseData(source).Returns(expected)
+            .SetName($"toArray %A{source} returns %A{expected}"))
 
 [<TestCaseSource(nameof toArrayTestParameters)>]
 let ``toArray with valid arguments`` (source: int[,]) =

@@ -34,14 +34,15 @@ let pairwiseWrappedTestParameters =
         [1; 2; 3], [1, 2; 2, 3; 3, 1]
     ]
     |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected))
+        TestCaseData(source).Returns(expected)
+            .SetName($"pairwiseWrapped %A{source} returns %A{expected}"))
 
 [<TestCaseSource(nameof pairwiseWrappedTestParameters)>]
 let ``pairwiseWrapped with valid arguments`` source =
     source |> List.pairwiseWrapped
 
 [<Test>]
-let ``crossMap is equivalent to allPairs + map`` () =
+let ``crossMap is equivalent to allPairs followed by map`` () =
     let source1, source2 = [1 .. 10], [11 .. 20]
     let actual = (source1, source2) ||> List.crossMap (fun x y -> x + y)
     let expected = (source1, source2) ||> List.allPairs |> List.map (fun (x, y) -> x + y)

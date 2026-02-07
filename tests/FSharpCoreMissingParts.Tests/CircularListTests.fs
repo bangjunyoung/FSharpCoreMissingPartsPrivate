@@ -28,18 +28,19 @@ module FSharpCoreMissingParts.CircularListTests
 open NUnit.Framework
 
 let valueTestParameters =
-    let boxList = [box 1; box 2]
-    let cycle = CircularList.ofList boxList
-    [
-        (fun () -> cycle |> CircularList.value), boxList.[0]
-        (fun () -> cycle |> CircularList.next |> CircularList.value), boxList.[1]
-        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[0]
-        (fun () -> cycle |> CircularList.next |> CircularList.next |> CircularList.next |> CircularList.value), boxList.[1]
+    let boxedList: obj list = [1; 2]
+    let listHead = CircularList.ofList boxedList
 
-        (fun () -> cycle.Value), boxList.[0]
-        (fun () -> cycle.Next.Value), boxList.[1]
-        (fun () -> cycle.Next.Next.Value), boxList.[0]
-        (fun () -> cycle.Next.Next.Next.Value), boxList.[1]
+    [
+        (fun () -> listHead |> CircularList.value), boxedList[0]
+        (fun () -> listHead |> CircularList.next |> CircularList.value), boxedList[1]
+        (fun () -> listHead |> CircularList.next |> CircularList.next |> CircularList.value), boxedList[0]
+        (fun () -> listHead |> CircularList.next |> CircularList.next |> CircularList.next |> CircularList.value), boxedList[1]
+
+        (fun () -> listHead.Value), boxedList[0]
+        (fun () -> listHead.Next.Value), boxedList[1]
+        (fun () -> listHead.Next.Next.Value), boxedList[0]
+        (fun () -> listHead.Next.Next.Next.Value), boxedList[1]
     ]
     |> List.map (fun (expr, expected) ->
         TestCaseData(expr).Returns(expected))
@@ -49,7 +50,6 @@ let ``value with valid arguments`` (f: unit -> obj) =
     f ()
 
 [<Test>]
-let ``ofList throws ArgumentException if [] is given`` () =
-    Assert.Throws<System.ArgumentException>(
-        fun () -> [] |> CircularList.ofList |> ignore)
-    |> ignore
+let ``ofList throws ArgumentException if an empty list is given`` () =
+    Assert.That((fun () -> CircularList.ofList [] |> ignore),
+        Throws.TypeOf<System.ArgumentException>())

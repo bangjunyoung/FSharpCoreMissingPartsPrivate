@@ -40,9 +40,9 @@ let windowedTestParamters =
         "1234", 4, [|"1234"|]
         "1234", 5, [||]
     ]
-    |> List.map (fun (source, predicate, expected) ->
-        TestCaseData(source, predicate).Returns(expected)
-            .SetName(sprintf "{0} |> windowed {1} returns %A" expected))
+    |> List.map (fun (source, windowSize, expected) ->
+        TestCaseData(source, windowSize).Returns(expected)
+            .SetName($"windowed {windowSize} \"{source}\" returns %A{expected}"))
 
 [<TestCaseSource(nameof windowedTestParamters)>]
 let ``windowed with valid arguments`` (source: string) size =
@@ -52,45 +52,47 @@ let ``windowed with valid arguments`` (source: string) size =
     |> Seq.map string
 
 [<Test>]
-let ``windowed with windowSize <= 0 throws ArgumentException`` () =
+let ``windowed throws ArgumentException if windowSize <= 0`` () =
     Assert.That(Func<_>(fun () -> "123".AsMemory() |> Mem.windowed 0),
         Throws.TypeOf<ArgumentException>())
 
+let isEven = fun n -> int n % 2 = 0
+let isOdd = fun n -> int n % 2 <> 0
 let forallTestParameters =
     [
-        "",      (fun (x: char) -> int x % 2 = 0), true
-        "02468", (fun (x: char) -> int x % 2 = 0), true
-        "02468", (fun (x: char) -> int x % 2 = 1), false
-        "13579", (fun (x: char) -> int x % 2 = 0), false
-        "13579", (fun (x: char) -> int x % 2 = 1), true
+        "",      isEven, nameof isEven, true
+        "02468", isEven, nameof isEven, true
+        "02468", isOdd, nameof isOdd, false
+        "13579", isEven, nameof isEven, false
+        "13579", isOdd, nameof isOdd, true
     ]
-    |> List.map (fun (source, predicate, expected) ->
-        TestCaseData(source, predicate).Returns(expected))
+    |> List.map (fun (source, (predicate: char -> bool), predicateName, expected) ->
+        TestCaseData(source, predicate).Returns(expected)
+            .SetName($"forall {predicateName} \"{source}\" returns {expected}"))
 
 [<TestCaseSource(nameof forallTestParameters)>]
-let ``forall with various arguments`` source predicate =
+let ``forall with valid arguments`` source predicate =
     source |> Mem.ofString |> Mem.forall predicate
 
 let forall2TestParameters =
     [
-        "",     "23", None
-        "1234", "23", Some 1
-        "1234", "45", None
+        "abc", "abc", true
+        "abc", "abd", false
+        "abc", "xyz", false
     ]
-    |> List.map (fun (source, pattern, expected) ->
-        TestCaseData(source, pattern).Returns(expected))
+    |> List.map (fun (s1, s2, expected) ->
+        TestCaseData(s1, s2).Returns(expected)
+            .SetName($"""forall2 (=) "%s{s1}" "%s{s2}" returns {expected}"""))
 
 [<TestCaseSource(nameof forall2TestParameters)>]
-let ``forall2 with various arguments`` source pattern =
-    source
-    |> Mem.ofString
-    |> Mem.windowed 2
-    |> Seq.tryFindIndex (fun t ->
-        (t, Mem.ofString pattern)
-        ||> Mem.forall2 (=))
+let ``forall2 with valid arguments`` s1 s2 =
+    let m1 = Mem.ofString s1
+    let m2 = Mem.ofString s2
+    
+    (m1, m2) ||> Mem.forall2 (=)
 
 [<Test>]
-let ``forall2 with two empty sources returns true`` () =
+let ``forall2 with two empty sources returns True`` () =
     Assert.That((Mem.ofString "", Mem.ofString "")
                 ||> Mem.forall2 (=))
 

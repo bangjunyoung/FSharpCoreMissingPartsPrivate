@@ -34,7 +34,8 @@ let tryBinarySearchTestParameters =
         [|1 .. 50|], 42, Some 41
     ]
     |> List.map (fun (source, value, expected) ->
-        TestCaseData(source, value).Returns(expected))
+        TestCaseData(source, value).Returns(expected)
+            .SetName($"""tryBinarySearch {value} {String.ellipsize 10 (sprintf "%A" source)} returns %A{expected}"""))
 
 [<TestCaseSource(nameof tryBinarySearchTestParameters)>]
 let ``tryBinarySearch with valid arguments`` (source: int[]) value =
@@ -47,7 +48,8 @@ let tryBinarySearchWithTestParameters =
         [|50 .. -1 .. 1|], 42, Some 8
     ]
     |> List.map (fun (source, value, expected) ->
-        TestCaseData(source, value).Returns(expected))
+        TestCaseData(source, value).Returns(expected)
+            .SetName($"""tryBinarySearchWith reverseCompare {value} {String.ellipsize 10 (sprintf "%A" source)} returns %A{expected}"""))
 
 [<TestCaseSource(nameof tryBinarySearchWithTestParameters)>]
 let ``tryBinarySearchWith with valid arguments`` (source: int[]) value =
