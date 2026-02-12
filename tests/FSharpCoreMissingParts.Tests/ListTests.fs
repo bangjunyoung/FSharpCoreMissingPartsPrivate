@@ -42,7 +42,7 @@ let pairwiseWrappedTest source =
 
 let crossMapTestParameters =
     [
-        (+), "op_Addition", [1; 2], [10; 20], [11; 21; 12; 22]
+        (+), "\uFF0B", [1; 2], [10; 20], [11; 21; 12; 22]
         (fun x y -> x * y), "fun x y -> x * y", [1; 2], [10; 20], [10; 20; 20; 40]
     ]
     |> List.map (fun (mapping, mappingDispname, source1, source2, expected) ->

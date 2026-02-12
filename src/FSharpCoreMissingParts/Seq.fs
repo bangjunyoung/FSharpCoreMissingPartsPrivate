@@ -67,11 +67,11 @@ module Seq =
     let isOrdered order source =
         let reverseCompare a b = compare b a
         let strictCompare a b =
-            match sign <| compare a b with
+            match sign (compare a b) with
             | -1 -> -1
             | _ -> 1
         let strictReverseCompare a b =
-            match sign <| compare a b with
+            match sign (compare a b) with
             | 1 -> -1
             | _ -> 1
 

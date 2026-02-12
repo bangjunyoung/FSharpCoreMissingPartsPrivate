@@ -42,8 +42,7 @@ module Mem =
 
     let windowed windowSize (source: Mem<'T>) : Mem<'T> seq =
         if windowSize <= 0 then
-            invalidArg (nameof windowSize)
-                $"must be positive, but {windowSize} was given."
+            invalidArg (nameof windowSize) $"must be positive, but {windowSize} was given."
 
         seq {
             for i in 0 .. source.Length - windowSize do
