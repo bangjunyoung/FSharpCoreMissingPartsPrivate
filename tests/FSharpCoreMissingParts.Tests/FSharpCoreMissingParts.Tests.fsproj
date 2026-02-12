@@ -20,7 +20,6 @@
     <Compile Include="StringTests.fs" />
     <Compile Include="CircularListTests.fs" />
     <Compile Include="NaturalSortTests.fs" />
-    <Compile Include="NullableTests.fs" />
     <Compile Include="MemTests.fs" />
   </ItemGroup>
 

@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="\"/>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +27,6 @@
     <Compile Include="Casting.fs" />
     <Compile Include="CircularList.fs" />
     <Compile Include="NaturalSort.fs" />
-    <Compile Include="Nullable.fs" />
     <Compile Include="Mem.fs" />
   </ItemGroup>
 

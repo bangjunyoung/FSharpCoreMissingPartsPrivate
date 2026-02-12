@@ -211,10 +211,6 @@ Provides "human-friendly" sorting that handles numbers within strings logically.
 val it : string list = ["z"; "z1"; "z2"; "z10"; "z012"; "z21"; "zz"]
 ```
 
-## Nullable
-
-F# implementation of C# nullable type.
-
 ## Seq
 
 ### `iterate`
