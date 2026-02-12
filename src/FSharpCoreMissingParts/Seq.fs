@@ -39,7 +39,7 @@ module Seq =
         }
         loop x
 
-    let foldSome folder state (source: seq<_>) =
+    let foldWhileSome folder state (source: seq<_>) =
         use en = source.GetEnumerator()
 
         let rec loop state =
@@ -57,7 +57,7 @@ module Seq =
             true
         else
             ((true, Seq.head source), Seq.tail source)
-            ||> foldSome
+            ||> foldWhileSome
                 (fun (sorted, prev) current ->
                     if sorted
                     then Some (comparer prev current <= 0, current)

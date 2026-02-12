@@ -226,7 +226,7 @@ Generates an infinite sequence by repeatedly applying a function to an initial v
 val it : int list = [1; 2; 4; 8; 16]
 ```
 
-### `foldSome`
+### `foldWhileSome`
 
 Similar to `Seq.fold`, but allows early termination. The folding process continues as long as the folder function returns `Some`. If it returns `None`, the sequence processing stops immediately and returns the last state.
 
