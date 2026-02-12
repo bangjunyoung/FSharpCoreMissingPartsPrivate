@@ -34,17 +34,23 @@ let pairwiseWrappedTestParameters =
         [1; 2; 3], [1, 2; 2, 3; 3, 1]
     ]
     |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected)
-            .SetName($"pairwiseWrapped %A{source} returns %A{expected}"))
+        TestCaseData(source).Returns(expected).SetName($"pairwiseWrapped %A{source}"))
 
 [<TestCaseSource(nameof pairwiseWrappedTestParameters)>]
-let ``pairwiseWrapped with valid arguments`` source =
+let pairwiseWrappedTest source =
     source |> List.pairwiseWrapped
 
-[<Test>]
-let ``crossMap is equivalent to allPairs followed by map`` () =
-    let source1, source2 = [1 .. 10], [11 .. 20]
-    let actual = (source1, source2) ||> List.crossMap (fun x y -> x + y)
-    let expected = (source1, source2) ||> List.allPairs |> List.map (fun (x, y) -> x + y)
+let crossMapTestParameters =
+    [
+        (+), "op_Addition", [1; 2], [10; 20], [11; 21; 12; 22]
+        (fun x y -> x * y), "fun x y -> x * y", [1; 2], [10; 20], [10; 20; 20; 40]
+    ]
+    |> List.map (fun (mapping, mappingDispname, source1, source2, expected) ->
+        let args = [| box mapping; box source1; box source2 |]
+        TestCaseData(args).Returns(expected)
+            .SetName($"crossMap ({mappingDispname}) %A{source1} %A{source2}"))
 
-    Assert.That(actual, Is.EqualTo expected)
+[<TestCaseSource(nameof crossMapTestParameters)>]
+let crossMapTest (mapping: 'a -> 'a -> 'a) source1 source2 =
+    (source1, source2) ||> List.crossMap mapping
+

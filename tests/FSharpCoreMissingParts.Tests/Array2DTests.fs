@@ -35,11 +35,10 @@ let ofArrayTestParameters =
         [|1 .. 6|], 2, 3, array2D [| [|1; 2; 3|]; [|4; 5; 6|] |]
     ]
     |> List.map (fun (source, nrows, ncols, expected) ->
-        TestCaseData(source, nrows, ncols).Returns(expected)
-            .SetName($"ofArray {nrows} {ncols} %A{source} returns %A{expected}"))
+        TestCaseData(source, nrows, ncols).Returns(expected).SetName($"ofArray {nrows} {ncols} %A{source}"))
 
 [<TestCaseSource(nameof ofArrayTestParameters)>]
-let ``ofArray with valid arguments`` (source: int[]) nrows ncols =
+let ofArrayTest (source: int[]) nrows ncols =
     source |> Array2D.ofArray nrows ncols
 
 let toArrayTestParameters =
@@ -51,8 +50,8 @@ let toArrayTestParameters =
     ]
     |> List.map (fun (source, expected) ->
         TestCaseData(source).Returns(expected)
-            .SetName($"toArray %A{source} returns %A{expected}"))
+            .SetName($"toArray %A{source}"))
 
 [<TestCaseSource(nameof toArrayTestParameters)>]
-let ``toArray with valid arguments`` (source: int[,]) =
+let toArrayTest (source: int[,]) =
     source |> Array2D.toArray

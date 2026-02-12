@@ -41,11 +41,10 @@ let windowedTestParamters =
         "1234", 5, [||]
     ]
     |> List.map (fun (source, windowSize, expected) ->
-        TestCaseData(source, windowSize).Returns(expected)
-            .SetName($"windowed {windowSize} \"{source}\" returns %A{expected}"))
+        TestCaseData(source, windowSize).Returns(expected).SetName($"windowed {windowSize} \"{source}\""))
 
 [<TestCaseSource(nameof windowedTestParamters)>]
-let ``windowed with valid arguments`` (source: string) size =
+let windowedTest (source: string) size =
     source
     |> Mem.ofString
     |> Mem.windowed size
@@ -56,10 +55,11 @@ let ``windowed throws ArgumentException if windowSize <= 0`` () =
     Assert.That(Func<_>(fun () -> "123".AsMemory() |> Mem.windowed 0),
         Throws.TypeOf<ArgumentException>())
 
-let isEven = fun n -> int n % 2 = 0
-let isOdd = fun n -> int n % 2 <> 0
 let forallTestParameters =
     [
+        let isEven n = int n % 2 = 0
+        let isOdd n = int n % 2 <> 0
+
         "",      isEven, nameof isEven, true
         "02468", isEven, nameof isEven, true
         "02468", isOdd, nameof isOdd, false
@@ -67,38 +67,44 @@ let forallTestParameters =
         "13579", isOdd, nameof isOdd, true
     ]
     |> List.map (fun (source, (predicate: char -> bool), predicateName, expected) ->
-        TestCaseData(source, predicate).Returns(expected)
-            .SetName($"forall {predicateName} \"{source}\" returns {expected}"))
+        TestCaseData(source, predicate).Returns(expected).SetName($"forall {predicateName} \"{source}\""))
 
 [<TestCaseSource(nameof forallTestParameters)>]
-let ``forall with valid arguments`` source predicate =
+let forallTest source predicate =
     source |> Mem.ofString |> Mem.forall predicate
 
 let forall2TestParameters =
     [
+        "", "", true
         "abc", "abc", true
+        "123", "1234", true
         "abc", "abd", false
         "abc", "xyz", false
     ]
-    |> List.map (fun (s1, s2, expected) ->
-        TestCaseData(s1, s2).Returns(expected)
-            .SetName($"""forall2 (=) "%s{s1}" "%s{s2}" returns {expected}"""))
+    |> List.map (fun (str1, str2, expected) ->
+        TestCaseData(str1, str2).Returns(expected).SetName($"forall2 (=) \"%s{str1}\" \"%s{str2}\""))
 
 [<TestCaseSource(nameof forall2TestParameters)>]
-let ``forall2 with valid arguments`` s1 s2 =
-    let m1 = Mem.ofString s1
-    let m2 = Mem.ofString s2
-    
+let forall2Test str1 str2 =
+    let m1 = Mem.ofString str1
+    let m2 = Mem.ofString str2
+
     (m1, m2) ||> Mem.forall2 (=)
 
-[<Test>]
-let ``forall2 with two empty sources returns True`` () =
-    Assert.That((Mem.ofString "", Mem.ofString "")
-                ||> Mem.forall2 (=))
+let forall2Test2Parameters2 =
+    [
+        [||], [||], true
+        [|1; 2; 3|], [|1; 2; 3|], true
+        [|1; 2; 3|], [|1; 2; 3; 4|], true
+        [|1; 2; 3|], [|1; 2; 4|], false
+        [|1; 2; 3|], [|3; 2; 1|], false
+    ]
+    |> List.map (fun (arr1, arr2, expected) ->
+        TestCaseData(arr1, arr2).Returns(expected).SetName($"""forall2 (=) %A{arr1} %A{arr2}"""))
 
-[<Test>]
-let ``forall2 with two sources of different lengths`` () =
-    Assert.That((Mem.ofString "123", Mem.ofString "1234")
-                ||> Mem.forall2 (=))
-    Assert.That((Mem.ofArray [|1 .. 4|], Mem.ofArray [|1 .. 3|])
-                ||> Mem.forall2 (=))
+[<TestCaseSource(nameof forall2Test2Parameters2)>]
+let forall2Test2 arr1 arr2 =
+    let m1 = Mem.ofArray arr1
+    let m2 = Mem.ofArray arr2
+
+    (m1, m2) ||> Mem.forall2 (=)

@@ -40,8 +40,7 @@ let ofSeqTestParameters =
         seq [|'f'; 'g'; 'h'|], "fgh"
     ]
     |> Seq.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected)
-            .SetName($"ofSeq %A{source} returns \"{expected}\""))
+        TestCaseData(source).Returns(expected).SetName($"ofSeq %A{source}"))
 
 [<TestCaseSource(nameof ofSeqTestParameters)>]
 let ``ofSeq with valid arguments`` source =
@@ -59,11 +58,10 @@ let ellipsizeTestParameters =
         4, "123", "123"
     ]
     |> Seq.map (fun (length, source, expected) ->
-        TestCaseData(length, source).Returns(expected)
-            .SetName($"ellipsize {length} \"{source}\" returns \"{expected}\""))
+        TestCaseData(length, source).Returns(expected).SetName($"ellipsize {length} \"{source}\""))
 
 [<TestCaseSource(nameof ellipsizeTestParameters)>]
-let ``ellipsize with valid arguments`` length source =
+let ellipsizeTest length source =
     source |> String.ellipsize length
 
 [<Test>]
@@ -79,9 +77,8 @@ let suffixesTestParameters =
         "금강산", ["금강산"; "강산"; "산"]
     ]
     |> Seq.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected)
-            .SetName($"suffixes \"{source}\" returns %A{expected}"))
+        TestCaseData(source).Returns(expected).SetName($"suffixes \"{source}\""))
 
 [<TestCaseSource(nameof suffixesTestParameters)>]
-let ``suffixes with valid arguments`` source =
+let suffixesTest source =
     source |> String.suffixes |> Seq.toList

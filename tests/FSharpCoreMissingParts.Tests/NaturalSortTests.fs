@@ -33,9 +33,8 @@ let testParameters =
          ["z"; "z1"; "z2"; "z10"; "z012"; "z21"; "zz"])
     ]
     |> List.map (fun (source, expected) ->
-        TestCaseData(source).Returns(expected)
-            .SetName($"sort %A{source} returns %A{expected}"))
+        TestCaseData(source).Returns(expected).SetName($"sort %A{source}"))
 
 [<TestCaseSource(nameof testParameters)>]
-let ``sort with valid arguments`` source =
+let sortTest source =
     NaturalSort.sort source

@@ -28,28 +28,28 @@ module FSharpCoreMissingParts.CircularListTests
 open NUnit.Framework
 
 let valueTestParameters =
-    let boxedList: obj list = [1; 2]
-    let listHead = CircularList.ofList boxedList
+    let boxedList: obj list = [0; 1; 2]
+    let head = CircularList.ofList boxedList
 
     [
-        (fun () -> listHead |> CircularList.value), boxedList[0]
-        (fun () -> listHead |> CircularList.next |> CircularList.value), boxedList[1]
-        (fun () -> listHead |> CircularList.next |> CircularList.next |> CircularList.value), boxedList[0]
-        (fun () -> listHead |> CircularList.next |> CircularList.next |> CircularList.next |> CircularList.value), boxedList[1]
+        (fun () -> head |> CircularList.value), boxedList[0]
+        (fun () -> head |> CircularList.next |> CircularList.value), boxedList[1]
+        (fun () -> head |> CircularList.next |> CircularList.next |> CircularList.value), boxedList[2]
+        (fun () -> head |> CircularList.next |> CircularList.next |> CircularList.next |> CircularList.value), boxedList[0]
 
-        (fun () -> listHead.Value), boxedList[0]
-        (fun () -> listHead.Next.Value), boxedList[1]
-        (fun () -> listHead.Next.Next.Value), boxedList[0]
-        (fun () -> listHead.Next.Next.Next.Value), boxedList[1]
+        (fun () -> head.Value), boxedList[0]
+        (fun () -> head.Next.Value), boxedList[1]
+        (fun () -> head.Next.Next.Value), boxedList[2]
+        (fun () -> head.Next.Next.Next.Value), boxedList[0]
     ]
-    |> List.map (fun (expr, expected) ->
-        TestCaseData(expr).Returns(expected))
+    |> List.mapi (fun i (expr, expected) ->
+        TestCaseData(expr).Returns(expected).SetName($"[{i}] value"))
 
 [<TestCaseSource(nameof valueTestParameters)>]
-let ``value with valid arguments`` (f: unit -> obj) =
+let valueTest (f: unit -> obj) =
     f ()
 
 [<Test>]
-let ``ofList throws ArgumentException if an empty list is given`` () =
+let ofListExceptionTest () =
     Assert.That((fun () -> CircularList.ofList [] |> ignore),
         Throws.TypeOf<System.ArgumentException>())

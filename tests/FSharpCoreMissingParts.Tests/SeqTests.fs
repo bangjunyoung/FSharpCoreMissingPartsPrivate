@@ -51,9 +51,8 @@ let isOrderedTestParameters =
         StrictDescending, [3; 2; 1], true
     ]
     |> List.map (fun (order, source, expected) ->
-        TestCaseData(order, source).Returns(expected)
-            .SetName($"isOrdered {order} %A{source} returns {expected}"))
+        TestCaseData(order, source).Returns(expected).SetName($"isOrdered {order} %A{source}"))
 
 [<TestCaseSource(nameof isOrderedTestParameters)>]
-let ``isOrdered with valid arguments`` order source =
+let isOrderedTest order source =
     Seq.isOrdered order source
