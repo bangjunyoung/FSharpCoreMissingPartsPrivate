@@ -32,6 +32,18 @@ type SortOrder =
     | StrictDescending
 
 module Seq =
+
+    ///
+    /// <summary>
+    /// Generates an infinite sequence by repeatedly applying a function to an initial value.
+    /// Each element is the result of applying the function to the previous element.
+    /// </summary>
+    ///
+    /// <param name="f">The function to apply.</param>
+    /// <param name="x">The initial value.</param>
+    ///
+    /// <returns>An infinite sequence of values.</returns>
+    ///
     let iterate f x =
         let rec loop x = seq {
             yield x
@@ -39,6 +51,22 @@ module Seq =
         }
         loop x
 
+    ///
+    /// <summary>
+    /// Similar to <c>Seq.fold</c>, but allows early termination.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// The folding process continues as long as the folder function returns <c>Some</c>.
+    /// If it returns <c>None</c>, the sequence processing stops immediately and returns the last state.
+    /// </remarks>
+    ///
+    /// <param name="folder">A function that takes the current state and an element, returning <c>Some newState</c> to continue or <c>None</c> to stop.</param>
+    /// <param name="state">The initial state.</param>
+    /// <param name="source">The input sequence to fold over.</param>
+    ///
+    /// <returns>The final state after folding or early termination.</returns>
+    ///
     let foldWhileSome folder state (source: seq<_>) =
         use en = source.GetEnumerator()
 
@@ -52,6 +80,16 @@ module Seq =
 
         loop state
 
+    ///
+    /// <summary>
+    /// Checks if a sequence is sorted according to the provided comparer function.
+    /// </summary>
+    ///
+    /// <param name="comparer">A comparison function that takes two elements and returns a negative number if the first is less than the second, zero if they are equal, and a positive number if the first is greater than the second.</param>
+    /// <param name="source">The input sequence to check.</param>
+    ///
+    /// <returns><c>true</c> if the sequence is sorted according to the comparer; <c>false</c> otherwise.</returns>
+    ///
     let isOrderedWith comparer source =
         if source |> Seq.truncate 2 |> Seq.length <= 1 then
             true
@@ -64,6 +102,18 @@ module Seq =
                     else None)
             |> fst
 
+    ///
+    /// <summary>
+    /// Checks if a sequence is sorted according to the specified <c>SortOrder</c>, which is
+    /// one of <c>Ascending</c>, <c>Descending</c>, <c>StrictAscending</c>, or <c>StrictDescending</c>.
+    /// </summary>
+    ///
+    /// <param name="order">The desired sort order.</param>
+    /// <param name="source">The input sequence to check.</param>
+    ///
+    /// <returns><c>true</c> if the sequence is sorted according to the specified order;
+    /// <c>false</c> otherwise.</returns>
+    ///
     let isOrdered order source =
         let reverseCompare a b = compare b a
         let strictCompare a b =

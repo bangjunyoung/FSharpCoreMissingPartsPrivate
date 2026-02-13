@@ -29,11 +29,32 @@ open System
 open System.Text
 
 module String =
+
+    ///
+    /// <summary>
+    /// Creates a string from a sequence of characters.
+    /// </summary>
+    ///
+    /// <param name="source">The input sequence of characters.</param>
+    ///
+    /// <returns>The resulting string.</returns>
+    ///
     let ofSeq (source: seq<char>) =
         (StringBuilder(Seq.length source), source)
         ||> Seq.fold (fun builder c -> builder.Append(c))
         |> string
 
+    ///
+    /// <summary>
+    /// Truncates the string to the specified length, and replace the last character
+    /// with an ellipsis (U+2026) if truncation occurs.
+    /// </summary>
+    ///
+    /// <param name="length">The maximum length of the resulting string.</param>
+    /// <param name="source">The input string to be truncated.</param>
+    ///
+    /// <returns>The truncated string (with an ellipsis if truncation occurs).</returns>
+    ///
     let ellipsize length source =
         if length < 0 then
             invalidArg (nameof length) $"{nameof length} must be positive, but {length} is given."
@@ -50,6 +71,7 @@ module String =
         else
             source
 
+    ///
     /// <summary>
     /// Generates all suffixes of the string, from longest to shortest.
     /// </summary>
@@ -57,6 +79,7 @@ module String =
     /// <param name="str">The input string to extract suffixes from.</param>
     ///
     /// <returns>A sequence of suffixes.</returns>
+    ///
     let suffixes str =
         str
         |> Seq.unfold (fun s ->

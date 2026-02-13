@@ -30,6 +30,14 @@ open System.Collections.Generic
 open System.Text.RegularExpressions
 
 module NaturalSort =
+
+    ///
+    /// <summary>Sorts a sequence of strings using natural sort order.</summary>
+    ///
+    /// <param name="source">The input sequence of strings.</param>
+    ///
+    /// <returns>A sequence of strings sorted in natural order.</returns>
+    ///
     let sort source =
         let split input =
             Regex.Split(input, "([0-9]+)")

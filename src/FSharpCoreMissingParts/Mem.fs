@@ -40,6 +40,14 @@ module Mem =
     let ofStringSlice startIndex length (source: string) : Mem<_> =
         source.AsMemory(startIndex, length)
 
+    ///
+    /// <summary>Yields a sequence of overlapping windows of the specified size.</summary>
+    ///
+    /// <param name="windowSize">The size of each sliding window.</param>
+    /// <param name="source">The input memory.</param>
+    ///
+    /// <returns>A sequence of memory slices representing the sliding windows.</returns>
+    ///
     let windowed windowSize (source: Mem<'T>) : Mem<'T> seq =
         if windowSize <= 0 then
             invalidArg (nameof windowSize) $"must be positive, but {windowSize} was given."
@@ -49,6 +57,14 @@ module Mem =
                 yield source.Slice(i, windowSize)
         }
 
+    ///
+    /// <summary>Determines whether all elements of the memory satisfy a given predicate.</summary>
+    ///
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="source">The input memory.</param>
+    ///
+    /// <returns><c>true</c> if all elements satisfy the predicate; otherwise, <c>false</c>.</returns>
+    ///
     let forall predicate (source: Mem<'T>) =
         let mutable result = true
         let mutable en = source.Span.GetEnumerator()
@@ -58,6 +74,15 @@ module Mem =
 
         result
 
+    ///
+    /// <summary>Determines whether all corresponding elements of two memories satisfy a given predicate.</summary>
+    ///
+    /// <param name="predicate">A function to test each pair of elements for a condition.</param>
+    /// <param name="source1">The first input memory.</param>
+    /// <param name="source2">The second input memory.</param>
+    ///
+    /// <returns><c>true</c> if all corresponding elements satisfy the predicate; otherwise, <c>false</c>.</returns>
+    ///
     let forall2 predicate (source1: Mem<'T1>) (source2: Mem<'T2>) =
         let mutable result = true
         let mutable en1 = source1.Span.GetEnumerator()

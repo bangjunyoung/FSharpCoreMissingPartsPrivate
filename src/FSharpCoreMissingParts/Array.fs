@@ -26,6 +26,15 @@
 namespace FSharpCoreMissingParts
 
 module Array =
+
+    ///
+    /// <summary>Performs a binary search within the specified array using an external comparer function.</summary>
+    ///
+    /// <param name="comparer">A function that compares two values of the array's element type.</param>
+    /// <param name="value">The value to locate.</param>
+    ///
+    /// <returns>The index of the value if found; otherwise, <c>None</c>.</returns>
+    ///
     let tryBinarySearchWith comparer (value: 'a) (source: 'a[]) =
         let rec loop lo hi =
             if lo > hi then None
@@ -38,5 +47,12 @@ module Array =
 
         loop 0 (source.Length - 1)
 
+    ///
+    /// <summary>Performs a binary search within the specified array.</summary>
+    ///
+    /// <param name="value">The value to locate.</param>
+    ///
+    /// <returns>The index of the value if found; otherwise, <c>None</c>.</returns>
+    ///
     let tryBinarySearch value source =
         source |> tryBinarySearchWith compare value

@@ -26,11 +26,28 @@
 namespace FSharpCoreMissingParts
 
 module Array2D =
+
+    ///
+    /// <summary>Converts a 2D array to a 1D array.</summary>
+    ///
+    /// <param name="source">The input 2D array.</param>
+    ///
+    /// <returns>A 1D array containing all elements of the 2D array in row-major order.</returns>
+    ///
     let toArray (source: 'T[,]) =
         source
         |> Seq.cast<'T>
         |> Seq.toArray
 
+    ///
+    /// <summary>Creates a 2D array from a 1D array.</summary>
+    ///
+    /// <param name="nrows">The number of rows in the resulting 2D array.</param>
+    /// <param name="ncols">The number of columns in the resulting 2D array.</param>
+    /// <param name="source">The input 1D array.</param>
+    ///
+    /// <returns>A 2D array with the specified dimensions containing elements from the 1D array in row-major order.</returns>
+    ///
     let ofArray nrows ncols source =
         if Array.length source <> nrows * ncols then
             invalidArg (nameof source) "must have a length of nrows multiplied by ncols"

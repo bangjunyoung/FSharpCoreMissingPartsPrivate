@@ -36,6 +36,13 @@ module CircularList =
     let value (node: CircularListNode<_>) = node.Value
     let next (node: CircularListNode<_>) = node.Next
 
+    ///
+    /// <summary>Creates an immutable circular linked list from a standard list.</summary>
+    ///
+    /// <param name="source">The input list.</param>
+    ///
+    /// <returns>The head node of the resulting list.</returns>
+    ///
     let ofList source =
         source
         |> List.map CircularListNode

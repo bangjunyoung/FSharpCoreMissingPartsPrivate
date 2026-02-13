@@ -27,9 +27,16 @@ namespace FSharpCoreMissingParts
 
 module List =
 
+    ///
     /// <summary>
-    /// A wrap-around version of List.pairwise that pairs the last element with the first.
+    /// A wrap-around version of <c>List.pairwise</c> that pairs the last element with the first.
     /// </summary>
+    ///
+    /// <param name="source">The input list.</param>
+    ///
+    /// <returns>A list of pairs where each pair consists of consecutive elements,
+    /// with the last paired with the first.</returns>
+    ///
     let pairwiseWrapped source =
         match source with
         | [] -> []
@@ -41,6 +48,24 @@ module List =
 
             loop source
 
+    ///
+    /// <summary>
+    /// Applies a mapper function to the Cartesian product of two lists.
+    /// </summary>
+    ///
+    /// <remarks>
+    /// This function generates all possible pairs of elements from the two input lists
+    /// and applies the provided mapper function to each pair, collecting the results
+    /// into a new list. Equivalent to <c>List.allPairs</c> followed by <c>List.map</c>.
+    /// </remarks>
+    ///
+    /// <param name="mapper">A function that takes an element from the first list and an element from the second list, returning a mapped value.</param>
+    /// <param name="source1">The first input list.</param>
+    /// <param name="source2">The second input list.</param>
+    ///
+    /// <returns>A list containing the results of applying the mapper function
+    /// to all combinations of elements from the two input lists.</returns>
+    ///
     let crossMap mapper source1 source2 =
         source1 |> List.collect (fun x ->
             source2 |> List.map (fun y ->
