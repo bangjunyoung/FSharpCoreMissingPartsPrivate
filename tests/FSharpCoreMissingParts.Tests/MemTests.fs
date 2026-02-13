@@ -28,12 +28,9 @@ module FSharpCoreMissingParts.MemTests
 open System
 open NUnit.Framework
 
-[<Test>]
-let ``windowed with an empty source returns an empty Seq`` () =
-    Assert.That("" |> Mem.ofString |> Mem.windowed 1, Is.EqualTo Seq.empty)
-
 let windowedTestParamters =
     [
+        "",     1, [||]
         "1234", 1, [|"1"; "2"; "3"; "4"|]
         "1234", 2, [|"12"; "23"; "34"|]
         "1234", 3, [|"123"; "234"|]

@@ -50,6 +50,6 @@ let valueTest (f: unit -> obj) =
     f ()
 
 [<Test>]
-let ofListExceptionTest () =
+let ``ofList throws ArgumentException if an empty list is specified`` () =
     Assert.That((fun () -> CircularList.ofList [] |> ignore),
         Throws.TypeOf<System.ArgumentException>())
